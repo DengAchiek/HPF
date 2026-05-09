@@ -1238,6 +1238,10 @@ textarea:focus {
     font-family: "Poppins", Arial, sans-serif;
 }
 
+.footer-block p {
+    color: rgba(255, 255, 255, 0.75);
+}
+
 .footer-block a:hover {
     color: var(--accent);
 }
