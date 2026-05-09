@@ -688,17 +688,39 @@ textarea {
 
 .field-gallery-section {
     background: var(--white);
+    overflow: hidden;
 }
 
-.photo-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
+.photo-carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 8px 0 22px;
+    mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+.photo-track {
+    display: flex;
+    width: max-content;
+    animation: photo-carousel-scroll 92s linear infinite;
+    will-change: transform;
+}
+
+.photo-carousel:hover .photo-track {
+    animation-play-state: paused;
+}
+
+.photo-sequence {
+    display: flex;
+    gap: 22px;
+    padding-right: 22px;
 }
 
 .photo-card {
     position: relative;
-    min-height: 280px;
+    flex: 0 0 clamp(260px, 27vw, 390px);
+    height: clamp(290px, 31vw, 390px);
     margin: 0;
     border-radius: 10px;
     background: var(--soft);
@@ -706,17 +728,24 @@ textarea {
     overflow: hidden;
 }
 
-.photo-card:nth-child(1),
-.photo-card:nth-child(6) {
-    grid-column: span 2;
-}
-
 .photo-card img {
     width: 100%;
     height: 100%;
-    min-height: 280px;
     object-fit: cover;
+    object-position: center;
     transition: transform 0.35s ease;
+}
+
+.photo-card.focus-upper img {
+    object-position: center 28%;
+}
+
+.photo-card.focus-center img {
+    object-position: center center;
+}
+
+.photo-card.focus-lower img {
+    object-position: center 72%;
 }
 
 .photo-card:hover img {
@@ -736,6 +765,16 @@ textarea {
     font-weight: 700;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+}
+
+@keyframes photo-carousel-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 .project-card,
@@ -1179,13 +1218,9 @@ textarea:focus {
         grid-template-columns: 1fr;
     }
 
-    .photo-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .photo-card:nth-child(1),
-    .photo-card:nth-child(6) {
-        grid-column: span 1;
+    .photo-card {
+        flex-basis: clamp(250px, 46vw, 360px);
+        height: 320px;
     }
 
     .feature-grid {
@@ -1392,14 +1427,20 @@ textarea:focus {
         min-height: 280px;
     }
 
-    .photo-grid,
     .image-collage {
         grid-template-columns: 1fr;
     }
 
-    .photo-card,
-    .photo-card img {
-        min-height: 260px;
+    .photo-carousel {
+        width: calc(100% + 24px);
+        margin-left: -12px;
+        mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+    }
+
+    .photo-card {
+        flex-basis: 76vw;
+        height: 310px;
     }
 
     .collage-photo-large {
@@ -1422,5 +1463,17 @@ textarea:focus {
 
     .mini-stats div {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .photo-carousel {
+        overflow-x: auto;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+    .photo-track {
+        animation: none;
     }
 }

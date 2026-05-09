@@ -75,44 +75,124 @@ INTERNSHIPS = [
 
 GALLERY_IMAGES = [
     {
+        "src": "images/im-01.jpeg",
+        "alt": "Community members gathered outdoors for a Health Planet Foundation session",
+        "caption": "Outdoor health talk",
+        "focus": "focus-center",
+    },
+    {
         "src": "images/im-02.jpeg",
         "alt": "Community group gathered for a health discussion",
         "caption": "Community dialogue",
+        "focus": "focus-center",
     },
     {
         "src": "images/im-03.jpeg",
         "alt": "Health Planet Foundation volunteers speaking with community members",
         "caption": "Field outreach",
+        "focus": "focus-upper",
     },
     {
         "src": "images/im-04.jpeg",
         "alt": "Volunteer supporting a household health activity",
         "caption": "Household support",
+        "focus": "focus-upper",
     },
     {
         "src": "images/im-05.jpeg",
         "alt": "Team member demonstrating handwashing and water safety materials",
         "caption": "Practical demos",
+        "focus": "focus-upper",
     },
     {
         "src": "images/im-06.jpeg",
         "alt": "Children and adults gathered under a tree for community programming",
         "caption": "Local participation",
+        "focus": "focus-upper",
     },
     {
         "src": "images/im-07.jpeg",
         "alt": "Community members receiving support during an outdoor session",
         "caption": "Trusted presence",
+        "focus": "focus-upper",
+    },
+    {
+        "src": "images/im-08.jpeg",
+        "alt": "Field preparation work at a community site",
+        "caption": "Site preparation",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-09.jpeg",
+        "alt": "Community members waiting during a Health Planet Foundation outreach day",
+        "caption": "Outreach day",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-10.jpeg",
+        "alt": "Health Planet Foundation staff member speaking with a mother during a home visit",
+        "caption": "Home visit",
+        "focus": "focus-upper",
+    },
+    {
+        "src": "images/im-11.jpeg",
+        "alt": "Team member holding program supplies for community outreach",
+        "caption": "Program supplies",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-12.jpeg",
+        "alt": "Health Planet Foundation team member supporting a community health activity",
+        "caption": "Hands-on support",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-13.jpeg",
+        "alt": "Health Planet Foundation team with field materials",
+        "caption": "Prepared teams",
+        "focus": "focus-center",
     },
     {
         "src": "images/im-14.jpeg",
         "alt": "Health Planet Foundation team with field supplies",
-        "caption": "Prepared teams",
+        "caption": "Field supplies",
+        "focus": "focus-center",
     },
     {
         "src": "images/im-15.jpeg",
         "alt": "Program staff arranging community health supplies",
         "caption": "Field materials",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-16.jpeg",
+        "alt": "Intern supporting a community health activity",
+        "caption": "Learning through service",
+        "focus": "focus-upper",
+    },
+    {
+        "src": "images/im-17.jpeg",
+        "alt": "Community session with mothers and health volunteers",
+        "caption": "Motherhood circle",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-18.jpeg",
+        "alt": "Health Planet Foundation team speaking with community members",
+        "caption": "Community meeting",
+        "focus": "focus-center",
+    },
+    {
+        "src": "images/im-19.jpeg",
+        "alt": "Young people and community leaders gathering outdoors",
+        "caption": "Youth engagement",
+        "focus": "focus-upper",
+    },
+    {
+        "src": "images/im-20.jpeg",
+        "alt": "Health Planet Foundation volunteer supporting bedside care",
+        "caption": "Care support",
+        "focus": "focus-upper",
     },
 ]
 
