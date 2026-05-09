@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260509-photo-carousel1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260509-focus-dropdown1">
 </head>
 <body class="route-{{ request.resolver_match.url_name|default:'page' }}">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -30,6 +30,17 @@
             <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
             <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
             <a href="{% url 'projects' %}" class="{% if request.resolver_match.url_name == 'projects' %}active{% endif %}">Projects</a>
+            <div class="nav-dropdown {% if request.resolver_match.url_name == 'focus_area' %}active{% endif %}">
+                <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="focus-areas-menu">
+                    Focus Areas
+                    <span aria-hidden="true">&#9662;</span>
+                </button>
+                <div class="nav-dropdown-menu" id="focus-areas-menu">
+                    <a href="{% url 'focus_area' 'epidemic-preparedness' %}" class="{% if request.resolver_match.kwargs.slug == 'epidemic-preparedness' %}active{% endif %}">Epidemic Preparedness</a>
+                    <a href="{% url 'focus_area' 'advocacy-and-health-promotions' %}" class="{% if request.resolver_match.kwargs.slug == 'advocacy-and-health-promotions' %}active{% endif %}">Advocacy and Health Promotions</a>
+                    <a href="{% url 'focus_area' 'wash' %}" class="{% if request.resolver_match.kwargs.slug == 'wash' %}active{% endif %}">WASH</a>
+                </div>
+            </div>
             <a href="{% url 'news' %}" class="{% if request.resolver_match.url_name == 'news' %}active{% endif %}">News</a>
             <a href="{% url 'careers' %}" class="{% if request.resolver_match.url_name == 'careers' %}active{% endif %}">Careers</a>
             <a href="{% url 'internships' %}" class="{% if request.resolver_match.url_name == 'internships' %}active{% endif %}">Internships</a>
@@ -86,15 +97,36 @@
         const navShell = document.querySelector(".nav-shell");
         const navToggle = document.querySelector(".nav-toggle");
         const navLinks = document.querySelectorAll(".site-nav a, .nav-actions a");
+        const dropdown = document.querySelector(".nav-dropdown");
+        const dropdownToggle = document.querySelector(".nav-dropdown-toggle");
 
         if (!navShell || !navToggle) {
             return;
+        }
+
+        function setDropdown(open) {
+            if (!dropdown || !dropdownToggle) {
+                return;
+            }
+
+            dropdown.classList.toggle("is-open", open);
+            dropdownToggle.setAttribute("aria-expanded", String(open));
         }
 
         function setMenu(open) {
             navShell.classList.toggle("is-open", open);
             navToggle.setAttribute("aria-expanded", String(open));
             navToggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+
+            if (!open) {
+                setDropdown(false);
+            }
+        }
+
+        if (dropdownToggle) {
+            dropdownToggle.addEventListener("click", function () {
+                setDropdown(!dropdown.classList.contains("is-open"));
+            });
         }
 
         navToggle.addEventListener("click", function () {
@@ -103,24 +135,28 @@
 
         navLinks.forEach(function (link) {
             link.addEventListener("click", function () {
+                setDropdown(false);
                 setMenu(false);
             });
         });
 
         document.addEventListener("keydown", function (event) {
             if (event.key === "Escape") {
+                setDropdown(false);
                 setMenu(false);
             }
         });
 
         document.addEventListener("click", function (event) {
             if (!navShell.contains(event.target)) {
+                setDropdown(false);
                 setMenu(false);
             }
         });
 
         window.addEventListener("resize", function () {
             if (window.innerWidth > 700) {
+                setDropdown(false);
                 setMenu(false);
             }
         });

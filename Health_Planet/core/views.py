@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 
 
@@ -72,6 +73,45 @@ INTERNSHIPS = [
         "focus": "Field research, community sessions, and reporting support",
     },
 ]
+
+FOCUS_AREAS = {
+    "epidemic-preparedness": {
+        "title": "Epidemic Preparedness",
+        "kicker": "Focus area",
+        "summary": "Helping communities recognize risks early, prepare local response pathways, and keep essential health information moving during outbreaks.",
+        "image": "images/im-04.jpeg",
+        "image_alt": "Volunteer supporting a household health activity",
+        "points": [
+            "Community readiness sessions",
+            "Early-warning communication",
+            "Referral and response coordination",
+        ],
+    },
+    "advocacy-and-health-promotions": {
+        "title": "Advocacy and Health Promotions",
+        "kicker": "Focus area",
+        "summary": "Supporting health education, public awareness, and trusted community conversations that help families act earlier and make informed choices.",
+        "image": "images/im-09.jpeg",
+        "image_alt": "Community members attending a Health Planet Foundation outreach session",
+        "points": [
+            "Health talks and campaigns",
+            "Youth-centered awareness",
+            "Community-led advocacy",
+        ],
+    },
+    "wash": {
+        "title": "WASH",
+        "kicker": "Focus area",
+        "summary": "Promoting practical water, sanitation, and hygiene action so families can reduce preventable health risks in everyday life.",
+        "image": "images/im-15.jpeg",
+        "image_alt": "Program staff arranging WASH and community health supplies",
+        "points": [
+            "Water safety demonstrations",
+            "Hygiene promotion",
+            "Household sanitation support",
+        ],
+    },
+}
 
 GALLERY_IMAGES = [
     {
@@ -212,6 +252,14 @@ def about(request):
 
 def projects(request):
     return render(request, "projects.html", {"projects": PROJECTS})
+
+
+def focus_area(request, slug):
+    area = FOCUS_AREAS.get(slug)
+    if area is None:
+        raise Http404("Focus area not found")
+
+    return render(request, "focus_area.html", {"area": area})
 
 
 def news(request):

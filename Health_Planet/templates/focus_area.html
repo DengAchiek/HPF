@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ area.title }} | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<section class="page-hero hero-focus">
+    <div class="container page-hero-inner">
+        <p class="hero-kicker">{{ area.kicker }}</p>
+        <h1>{{ area.title }}</h1>
+        <p>{{ area.summary }}</p>
+    </div>
+</section>
+
+<section class="section section-soft">
+    <div class="container split-layout">
+        <div class="section-copy">
+            <p class="eyebrow">Program priority</p>
+            <h2>Practical action built around community needs.</h2>
+            <p>{{ area.summary }}</p>
+            <div class="impact-points" aria-label="{{ area.title }} priorities">
+                {% for point in area.points %}
+                <span>{{ point }}</span>
+                {% endfor %}
+            </div>
+            <a class="button button-dark compact-button" href="{% url 'contact' %}">Partner with us</a>
+        </div>
+        <div class="image-feature">
+            <img src="{% static area.image %}" alt="{{ area.image_alt }}" loading="lazy">
+            <div class="image-caption">{{ area.title }}</div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-cta">
+    <div class="container cta-panel">
+        <div>
+            <p class="eyebrow">Focus areas</p>
+            <h2>Work with Health Planet Foundation to strengthen community health readiness.</h2>
+        </div>
+        <a class="button button-primary" href="{% url 'projects' %}">Explore projects</a>
+    </div>
+</section>
+{% endblock %}
