@@ -344,7 +344,7 @@ textarea {
     padding: 58px 0 126px;
     background:
         linear-gradient(rgba(22, 56, 31, 0.56), rgba(22, 56, 31, 0.56)),
-        url("/static/images/hero-health.png") center center / cover no-repeat;
+        url("/static/images/im-01.jpeg") center center / cover no-repeat;
     color: var(--white);
     text-align: center;
 }
@@ -686,6 +686,58 @@ textarea {
     -webkit-backdrop-filter: blur(12px);
 }
 
+.field-gallery-section {
+    background: var(--white);
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.photo-card {
+    position: relative;
+    min-height: 280px;
+    margin: 0;
+    border-radius: 10px;
+    background: var(--soft);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.photo-card:nth-child(1),
+.photo-card:nth-child(6) {
+    grid-column: span 2;
+}
+
+.photo-card img {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.photo-card:hover img {
+    transform: scale(1.04);
+}
+
+.photo-card figcaption {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    max-width: calc(100% - 28px);
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(22, 56, 31, 0.78);
+    color: var(--white);
+    font-size: 0.78rem;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 .project-card,
 .news-card {
     position: relative;
@@ -717,6 +769,25 @@ textarea {
 
 .news-card-large {
     min-height: 280px;
+}
+
+.has-image {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-photo {
+    position: relative;
+    margin: -38px -38px 28px;
+    aspect-ratio: 1.45 / 1;
+    background: var(--soft);
+    overflow: hidden;
+}
+
+.card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .text-link {
@@ -775,6 +846,48 @@ textarea {
     text-align: center;
 }
 
+.page-hero.hero-about {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-09.jpeg") center center / cover no-repeat;
+}
+
+.page-hero.hero-projects {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-13.jpeg") center center / cover no-repeat;
+}
+
+.page-hero.hero-news {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-17.jpeg") center center / cover no-repeat;
+}
+
+.page-hero.hero-careers {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-19.jpeg") center center / cover no-repeat;
+}
+
+.page-hero.hero-internships {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-16.jpeg") center center / cover no-repeat;
+}
+
+.page-hero.hero-donate {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-15.jpeg") center center / cover no-repeat;
+}
+
+.page-hero.hero-contact {
+    background:
+        linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
+        url("/static/images/im-18.jpeg") center center / cover no-repeat;
+}
+
 .page-hero::after {
     content: "";
     position: absolute;
@@ -810,6 +923,52 @@ textarea {
 .rich-panel {
     display: grid;
     gap: 20px;
+}
+
+.about-photos-section,
+.careers-intro,
+.internships-intro {
+    background: var(--white);
+}
+
+.image-collage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-auto-rows: minmax(180px, 1fr);
+    gap: 16px;
+}
+
+.collage-photo {
+    margin: 0;
+    border-radius: 10px;
+    background: var(--soft);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.collage-photo-large {
+    grid-row: span 2;
+}
+
+.collage-photo img {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+
+.support-photo {
+    margin-top: 26px;
+    border-radius: 10px;
+    background: var(--soft);
+    box-shadow: 0 24px 54px -36px rgba(22, 56, 31, 0.5);
+    overflow: hidden;
+}
+
+.support-photo img {
+    width: 100%;
+    aspect-ratio: 1.45 / 1;
+    object-fit: cover;
 }
 
 .opportunity-list {
@@ -1020,6 +1179,15 @@ textarea:focus {
         grid-template-columns: 1fr;
     }
 
+    .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .photo-card:nth-child(1),
+    .photo-card:nth-child(6) {
+        grid-column: span 1;
+    }
+
     .feature-grid {
         gap: 24px;
     }
@@ -1198,6 +1366,10 @@ textarea:focus {
         padding: 28px;
     }
 
+    .card-photo {
+        margin: -28px -28px 24px;
+    }
+
     .feature-card {
         min-height: auto;
         padding: 30px 26px;
@@ -1218,6 +1390,20 @@ textarea:focus {
 
     .image-feature img {
         min-height: 280px;
+    }
+
+    .photo-grid,
+    .image-collage {
+        grid-template-columns: 1fr;
+    }
+
+    .photo-card,
+    .photo-card img {
+        min-height: 260px;
+    }
+
+    .collage-photo-large {
+        grid-row: auto;
     }
 
     .why-area .section-copy h2 {

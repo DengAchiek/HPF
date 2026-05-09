@@ -1,13 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Careers | Health Planet Foundation{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero hero-careers">
     <div class="container page-hero-inner">
         <p class="hero-kicker">Careers</p>
         <h1>Work with a team focused on practical community health impact.</h1>
         <p>We look for people who listen carefully, move with integrity, and care about the details that make programs last.</p>
+    </div>
+</section>
+
+<section class="section careers-intro">
+    <div class="container split-layout">
+        <div class="section-copy">
+            <p class="eyebrow">Team culture</p>
+            <h2>Work close to the communities we serve.</h2>
+            <p>Our team values respectful field practice, clear reporting, and patient relationship-building with partners and families.</p>
+        </div>
+        <div class="image-feature">
+            <img src="{% static 'images/im-19.jpeg' %}" alt="Health Planet Foundation staff and community members gathered outdoors" loading="lazy">
+            <div class="image-caption">Community-centered work</div>
+        </div>
     </div>
 </section>
 

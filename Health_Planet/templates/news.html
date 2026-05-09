@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}News | Health Planet Foundation{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero hero-news">
     <div class="container page-hero-inner">
         <p class="hero-kicker">News</p>
         <h1>Field notes, program updates, and partner stories.</h1>
@@ -20,7 +21,10 @@
 
         <div class="news-grid">
             {% for item in news_items %}
-            <article class="news-card news-card-large">
+            <article class="news-card news-card-large has-image">
+                <figure class="card-photo">
+                    <img src="{% static item.image %}" alt="{{ item.image_alt }}" loading="lazy">
+                </figure>
                 <span>{{ item.date }}</span>
                 <h3>{{ item.title }}</h3>
                 <p>{{ item.summary }}</p>

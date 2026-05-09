@@ -1,13 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Internships | Health Planet Foundation{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero hero-internships">
     <div class="container page-hero-inner">
         <p class="hero-kicker">Internships</p>
         <h1>Learn by supporting real public health and climate resilience work.</h1>
         <p>Interns contribute to field preparation, communications, research, and program reporting.</p>
+    </div>
+</section>
+
+<section class="section internships-intro">
+    <div class="container split-layout reverse">
+        <div class="image-feature">
+            <img src="{% static 'images/im-16.jpeg' %}" alt="Intern supporting a community health activity" loading="lazy">
+            <div class="image-caption">Learning through service</div>
+        </div>
+        <div class="section-copy">
+            <p class="eyebrow">Hands-on learning</p>
+            <h2>Support field work, storytelling, and program preparation.</h2>
+            <p>Interns help prepare sessions, document community needs, and learn how public health programs move from planning to practice.</p>
+        </div>
     </div>
 </section>
 

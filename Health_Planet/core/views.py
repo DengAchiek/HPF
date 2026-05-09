@@ -6,16 +6,22 @@ PROJECTS = [
         "title": "Climate-Smart Clinics",
         "description": "Helping rural health posts prepare for heat, flooding, and service disruption through local planning and practical resilience tools.",
         "status": "Active",
+        "image": "images/im-13.jpeg",
+        "image_alt": "Health Planet Foundation team members preparing field materials",
     },
     {
         "title": "Safe Motherhood Circles",
         "description": "Community-led sessions connecting expectant mothers with health information, referral support, and trusted peer networks.",
         "status": "Field program",
+        "image": "images/im-17.jpeg",
+        "image_alt": "Community session with mothers and health volunteers",
     },
     {
         "title": "Youth Mental Wellness",
         "description": "School and community outreach that makes mental health conversations easier, earlier, and connected to local care pathways.",
         "status": "Growing",
+        "image": "images/im-19.jpeg",
+        "image_alt": "Young people and community leaders gathering outdoors",
     },
 ]
 
@@ -24,16 +30,22 @@ NEWS_ITEMS = [
         "title": "Community health volunteers expand outreach in Lusaka Province",
         "date": "May 2026",
         "summary": "New volunteer cohorts are supporting health talks, referrals, and preparedness conversations in high-risk communities.",
+        "image": "images/im-09.jpeg",
+        "image_alt": "Community members attending a Health Planet Foundation outreach session",
     },
     {
         "title": "Climate resilience sessions reach district health teams",
         "date": "April 2026",
         "summary": "District teams reviewed practical response plans for heat stress, water safety, and continuity of essential services.",
+        "image": "images/im-08.jpeg",
+        "image_alt": "Field preparation work at a community site",
     },
     {
         "title": "Youth wellness clubs launch a peer-support calendar",
         "date": "March 2026",
         "summary": "Young leaders are creating consistent spaces for mental wellness education and early help-seeking.",
+        "image": "images/im-01.jpeg",
+        "image_alt": "Youth and community members seated during an outdoor session",
     },
 ]
 
@@ -61,11 +73,55 @@ INTERNSHIPS = [
     },
 ]
 
+GALLERY_IMAGES = [
+    {
+        "src": "images/im-02.jpeg",
+        "alt": "Community group gathered for a health discussion",
+        "caption": "Community dialogue",
+    },
+    {
+        "src": "images/im-03.jpeg",
+        "alt": "Health Planet Foundation volunteers speaking with community members",
+        "caption": "Field outreach",
+    },
+    {
+        "src": "images/im-04.jpeg",
+        "alt": "Volunteer supporting a household health activity",
+        "caption": "Household support",
+    },
+    {
+        "src": "images/im-05.jpeg",
+        "alt": "Team member demonstrating handwashing and water safety materials",
+        "caption": "Practical demos",
+    },
+    {
+        "src": "images/im-06.jpeg",
+        "alt": "Children and adults gathered under a tree for community programming",
+        "caption": "Local participation",
+    },
+    {
+        "src": "images/im-07.jpeg",
+        "alt": "Community members receiving support during an outdoor session",
+        "caption": "Trusted presence",
+    },
+    {
+        "src": "images/im-14.jpeg",
+        "alt": "Health Planet Foundation team with field supplies",
+        "caption": "Prepared teams",
+    },
+    {
+        "src": "images/im-15.jpeg",
+        "alt": "Program staff arranging community health supplies",
+        "caption": "Field materials",
+    },
+]
+
 
 def home(request):
     context = {
         "projects": PROJECTS,
         "news_items": NEWS_ITEMS[:2],
+        "gallery_images": GALLERY_IMAGES,
     }
     return render(request, "home.html", context)
 

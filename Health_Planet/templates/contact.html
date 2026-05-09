@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Contact | Health Planet Foundation{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero hero-contact">
     <div class="container page-hero-inner">
         <p class="hero-kicker">Contact</p>
         <h1>Start a partnership conversation or reach the program team.</h1>
@@ -21,6 +22,9 @@
             <div class="contact-note">
                 <strong>Partnership focus</strong>
                 <span>Community health, climate resilience, safe motherhood, mental wellness, and youth-centered public health programs.</span>
+            </div>
+            <div class="support-photo">
+                <img src="{% static 'images/im-18.jpeg' %}" alt="Health Planet Foundation team speaking with community members" loading="lazy">
             </div>
         </div>
 

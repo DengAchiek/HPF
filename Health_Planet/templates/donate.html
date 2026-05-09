@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Donate | Health Planet Foundation{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero hero-donate">
     <div class="container page-hero-inner">
         <p class="hero-kicker">Donate</p>
         <h1>Your support helps communities prepare earlier and care better.</h1>
@@ -21,6 +22,9 @@
                 <div><strong>25</strong><span>Field materials</span></div>
                 <div><strong>50</strong><span>Community session support</span></div>
                 <div><strong>100</strong><span>Training contribution</span></div>
+            </div>
+            <div class="support-photo">
+                <img src="{% static 'images/im-15.jpeg' %}" alt="Program staff preparing community health materials" loading="lazy">
             </div>
         </div>
 

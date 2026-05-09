@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}About | Health Planet Foundation{% endblock %}
 
 {% block content %}
-<section class="page-hero">
+<section class="page-hero hero-about">
     <div class="container page-hero-inner">
         <p class="hero-kicker">About us</p>
         <h1>Community health gets stronger when climate realities are part of the plan.</h1>
@@ -20,6 +21,27 @@
         <div class="rich-panel">
             <p>We work at the point where climate pressure meets everyday health. That means helping communities prepare for heat and floods, supporting safe motherhood, improving mental wellness, and making reliable health information easier to reach.</p>
             <p>Our approach is local, collaborative, and practical. We listen first, build with partners, and focus on tools that communities can keep using long after a project launch.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section about-photos-section">
+    <div class="container split-layout reverse">
+        <div class="image-collage" aria-label="Health Planet Foundation community work photos">
+            <figure class="collage-photo collage-photo-large">
+                <img src="{% static 'images/im-10.jpeg' %}" alt="Health Planet Foundation staff member speaking with a mother during a home visit" loading="lazy">
+            </figure>
+            <figure class="collage-photo">
+                <img src="{% static 'images/im-11.jpeg' %}" alt="Team member holding program materials for community outreach" loading="lazy">
+            </figure>
+            <figure class="collage-photo">
+                <img src="{% static 'images/im-20.jpeg' %}" alt="Health Planet Foundation volunteer supporting bedside care" loading="lazy">
+            </figure>
+        </div>
+        <div class="section-copy">
+            <p class="eyebrow">Field presence</p>
+            <h2>Support that meets people where they are.</h2>
+            <p>From homes and clinics to outdoor community meetings, our work is built around trust, listening, and practical health support.</p>
         </div>
     </div>
 </section>
