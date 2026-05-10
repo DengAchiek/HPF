@@ -1188,7 +1188,7 @@ textarea {
     gap: 10px;
     width: 100%;
     padding: 24px;
-    text-align: center;
+    text-align: left;
 }
 
 .staff-card h3 {
@@ -1207,32 +1207,154 @@ textarea {
     color: var(--body);
     font-size: 0.92rem;
     line-height: 1.65;
+    text-align: justify;
+    text-align-last: left;
 }
 
-.image-collage {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    grid-auto-rows: minmax(180px, 1fr);
-    gap: 16px;
-}
-
-.collage-photo {
-    margin: 0;
-    border-radius: 10px;
+.about-slideshow {
+    position: relative;
+    min-height: clamp(430px, 44vw, 560px);
+    border: 10px solid var(--white);
+    border-radius: 14px;
     background: var(--soft);
-    box-shadow: var(--shadow);
+    box-shadow: 0 34px 80px -42px rgba(22, 56, 31, 0.45);
     overflow: hidden;
+    isolation: isolate;
 }
 
-.collage-photo-large {
-    grid-row: span 2;
+.about-slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    animation: about-slide-fade 18s ease-in-out infinite;
 }
 
-.collage-photo img {
+.about-slide:nth-of-type(2) {
+    animation-delay: 6s;
+}
+
+.about-slide:nth-of-type(3) {
+    animation-delay: 12s;
+}
+
+.about-slide img {
     width: 100%;
     height: 100%;
-    min-height: 100%;
     object-fit: cover;
+    object-position: center;
+    transform: scale(1.04);
+    animation: about-slide-zoom 18s ease-in-out infinite;
+}
+
+.about-slide:nth-of-type(2) img {
+    animation-delay: 6s;
+    object-position: center 42%;
+}
+
+.about-slide:nth-of-type(3) img {
+    animation-delay: 12s;
+    object-position: center 52%;
+}
+
+.about-slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(22, 56, 31, 0) 42%, rgba(22, 56, 31, 0.72) 100%);
+    pointer-events: none;
+}
+
+.about-slide figcaption {
+    position: absolute;
+    left: 22px;
+    bottom: 22px;
+    z-index: 1;
+    max-width: calc(100% - 44px);
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--white);
+    font-size: 0.84rem;
+    font-weight: 700;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.about-slide-dots {
+    position: absolute;
+    right: 22px;
+    bottom: 26px;
+    z-index: 2;
+    display: flex;
+    gap: 8px;
+}
+
+.about-slide-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.42);
+    animation: about-dot-pulse 18s ease-in-out infinite;
+}
+
+.about-slide-dots span:nth-child(2) {
+    animation-delay: 6s;
+}
+
+.about-slide-dots span:nth-child(3) {
+    animation-delay: 12s;
+}
+
+@keyframes about-slide-fade {
+    100% {
+        opacity: 0;
+    }
+
+    0%,
+    6%,
+    30% {
+        opacity: 1;
+    }
+
+    38% {
+        opacity: 0;
+    }
+}
+
+@keyframes about-slide-zoom {
+    0% {
+        transform: scale(1.04);
+    }
+
+    30% {
+        transform: scale(1.11);
+    }
+
+    38%,
+    100% {
+        transform: scale(1.04);
+    }
+}
+
+@keyframes about-dot-pulse {
+    100% {
+        background: rgba(255, 255, 255, 0.42);
+        transform: scale(1);
+    }
+
+    0%,
+    6%,
+    30% {
+        background: var(--white);
+        transform: scale(1.28);
+    }
+
+    38% {
+        background: rgba(255, 255, 255, 0.42);
+        transform: scale(1);
+    }
 }
 
 .support-photo {
@@ -1754,8 +1876,8 @@ textarea:focus {
         min-height: 280px;
     }
 
-    .image-collage {
-        grid-template-columns: 1fr;
+    .about-slideshow {
+        min-height: 360px;
     }
 
     .photo-carousel {
@@ -1770,8 +1892,17 @@ textarea:focus {
         height: 310px;
     }
 
-    .collage-photo-large {
-        grid-row: auto;
+    .about-slide figcaption {
+        left: 14px;
+        bottom: 18px;
+        max-width: calc(100% - 90px);
+        border-radius: 12px;
+        font-size: 0.76rem;
+    }
+
+    .about-slide-dots {
+        right: 14px;
+        bottom: 24px;
     }
 
     .why-area .section-copy h2 {
@@ -1802,5 +1933,19 @@ textarea:focus {
 
     .photo-track {
         animation: none;
+    }
+
+    .about-slide,
+    .about-slide img,
+    .about-slide-dots span {
+        animation: none;
+    }
+
+    .about-slide {
+        opacity: 0;
+    }
+
+    .about-slide:first-of-type {
+        opacity: 1;
     }
 }
