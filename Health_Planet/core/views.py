@@ -2,6 +2,7 @@ from django.http import Http404
 from django.db.utils import OperationalError, ProgrammingError
 from django.shortcuts import render
 
+from . import defaults
 from .models import (
     CareerOpening,
     DonationAmount,
@@ -35,13 +36,27 @@ def safe_list(queryset):
         return []
 
 
+def first_or_default(queryset, fallback):
+    return safe_first(queryset) or fallback
+
+
+def list_or_default(queryset, fallback):
+    items = safe_list(queryset)
+    return items or fallback
+
+
 def get_page(slug):
-    return safe_first(PageContent.objects.filter(slug=slug))
+    return first_or_default(
+        PageContent.objects.filter(slug=slug),
+        defaults.PAGES.get(slug),
+    )
 
 
 def get_sections(page_slug):
+    default_sections = dict(defaults.SECTIONS.get(page_slug, {}))
     sections = safe_list(SectionContent.objects.filter(page_slug=page_slug).order_by("key"))
-    return {section.key: section for section in sections}
+    default_sections.update({section.key: section for section in sections})
+    return default_sections
 
 
 def base_page_context(slug):
@@ -55,28 +70,38 @@ def home(request):
     context = base_page_context("home")
     context.update(
         {
-            "features": safe_list(
+            "features": list_or_default(
                 FeatureCard.objects.filter(
                     section_key="home_features",
                     is_active=True,
-                )
+                ),
+                defaults.FEATURES,
             ),
-            "stats": safe_list(StatItem.objects.filter(is_active=True)),
-            "impact_points": safe_list(
+            "stats": list_or_default(
+                StatItem.objects.filter(is_active=True),
+                defaults.STATS,
+            ),
+            "impact_points": list_or_default(
                 FeatureCard.objects.filter(
                     section_key="home_impact_points",
                     is_active=True,
-                )
+                ),
+                defaults.IMPACT_POINTS,
             ),
-            "projects": safe_list(Project.objects.filter(is_active=True).order_by("sort_order", "id")),
-            "news_items": safe_list(
-                NewsItem.objects.filter(is_active=True).order_by("sort_order", "id")[:2]
+            "projects": list_or_default(
+                Project.objects.filter(is_active=True).order_by("sort_order", "id"),
+                defaults.PROJECTS,
             ),
-            "gallery_images": safe_list(
+            "news_items": list_or_default(
+                NewsItem.objects.filter(is_active=True).order_by("sort_order", "id")[:2],
+                defaults.NEWS_ITEMS[:2],
+            ),
+            "gallery_images": list_or_default(
                 GalleryImage.objects.filter(
                     gallery_key="home_gallery",
                     is_active=True,
-                ).order_by("sort_order", "id")
+                ).order_by("sort_order", "id"),
+                defaults.GALLERY_IMAGES,
             ),
         }
     )
@@ -87,29 +112,33 @@ def about(request):
     context = base_page_context("about")
     context.update(
         {
-            "about_slides": safe_list(
+            "about_slides": list_or_default(
                 GalleryImage.objects.filter(
                     gallery_key="about_slideshow",
                     is_active=True,
-                ).order_by("sort_order", "id")
+                ).order_by("sort_order", "id"),
+                defaults.ABOUT_SLIDES,
             ),
-            "work_features": safe_list(
+            "work_features": list_or_default(
                 FeatureCard.objects.filter(
                     section_key="about_work",
                     is_active=True,
-                )
+                ),
+                defaults.ABOUT_WORK_FEATURES,
             ),
-            "management_team": safe_list(
+            "management_team": list_or_default(
                 TeamMember.objects.filter(
                     team=TeamMember.TEAM_MANAGEMENT,
                     is_active=True,
-                )
+                ),
+                defaults.MANAGEMENT_TEAM,
             ),
-            "board_members": safe_list(
+            "board_members": list_or_default(
                 TeamMember.objects.filter(
                     team=TeamMember.TEAM_BOARD,
                     is_active=True,
-                )
+                ),
+                defaults.BOARD_MEMBERS,
             ),
         }
     )
@@ -118,12 +147,18 @@ def about(request):
 
 def projects(request):
     context = base_page_context("projects")
-    context["projects"] = safe_list(Project.objects.filter(is_active=True).order_by("sort_order", "id"))
+    context["projects"] = list_or_default(
+        Project.objects.filter(is_active=True).order_by("sort_order", "id"),
+        defaults.PROJECTS,
+    )
     return render(request, "projects.html", context)
 
 
 def focus_area(request, slug):
-    area = safe_first(FocusArea.objects.filter(slug=slug, is_active=True))
+    area = first_or_default(
+        FocusArea.objects.filter(slug=slug, is_active=True),
+        defaults.FOCUS_AREAS.get(slug),
+    )
     if area is None:
         raise Http404("Focus area not found")
 
@@ -134,21 +169,28 @@ def focus_area(request, slug):
 
 def news(request):
     context = base_page_context("news")
-    context["news_items"] = safe_list(
-        NewsItem.objects.filter(is_active=True).order_by("sort_order", "id")
+    context["news_items"] = list_or_default(
+        NewsItem.objects.filter(is_active=True).order_by("sort_order", "id"),
+        defaults.NEWS_ITEMS,
     )
     return render(request, "news.html", context)
 
 
 def careers(request):
     context = base_page_context("careers")
-    context["openings"] = safe_list(CareerOpening.objects.filter(is_active=True))
+    context["openings"] = list_or_default(
+        CareerOpening.objects.filter(is_active=True),
+        defaults.CAREER_OPENINGS,
+    )
     return render(request, "careers.html", context)
 
 
 def internships(request):
     context = base_page_context("internships")
-    context["internships"] = safe_list(InternshipTrack.objects.filter(is_active=True))
+    context["internships"] = list_or_default(
+        InternshipTrack.objects.filter(is_active=True),
+        defaults.INTERNSHIPS,
+    )
     return render(request, "internships.html", context)
 
 
@@ -156,7 +198,10 @@ def donate(request):
     context = base_page_context("donate")
     context.update(
         {
-            "amounts": safe_list(DonationAmount.objects.filter(is_active=True)),
+            "amounts": list_or_default(
+                DonationAmount.objects.filter(is_active=True),
+                defaults.DONATION_AMOUNTS,
+            ),
             "submitted": request.method == "POST",
         }
     )
