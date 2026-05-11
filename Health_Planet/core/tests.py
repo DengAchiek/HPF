@@ -45,7 +45,9 @@ class PublicContentFallbackTests(TestCase):
 
         self.assertContains(response, "Health Planet Foundation")
         self.assertContains(response, "What we do")
-        self.assertContains(response, "Climate-Smart Clinics")
+        self.assertContains(response, "CLIMATE RESILIENCE &amp; AGRICULTURE")
+        self.assertContains(response, "Waste Segregation &amp; Management")
+        self.assertContains(response, "ADVOCACY &amp; HEALTH PROMOTIONS")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
 
     def test_focus_area_uses_default_content_when_admin_content_is_empty(self):

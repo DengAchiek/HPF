@@ -581,6 +581,10 @@ textarea {
     transition: box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
+.feature-card-wide {
+    grid-column: span 2;
+}
+
 .feature-card:hover {
     transform: translateY(-8px);
     background: var(--white);
@@ -604,6 +608,14 @@ textarea {
 .opportunity-card h3 {
     margin-bottom: 14px;
     font-size: 1.5rem;
+}
+
+.feature-body p {
+    color: var(--body);
+}
+
+.feature-body p + p {
+    margin-top: 10px;
 }
 
 .counter-band {
@@ -1625,6 +1637,10 @@ textarea:focus {
 
     .feature-grid {
         gap: 24px;
+    }
+
+    .feature-card-wide {
+        grid-column: auto;
     }
 
     .staff-grid,

@@ -25,10 +25,10 @@
 
         <div class="feature-grid">
             {% for feature in features %}
-            <article class="feature-card">
+            <article class="feature-card{% if forloop.first %} feature-card-wide{% endif %}">
                 <span class="feature-icon">{{ feature.icon }}</span>
                 <h3>{{ feature.title }}</h3>
-                <p>{{ feature.body }}</p>
+                <div class="feature-body">{{ feature.body|linebreaks }}</div>
             </article>
             {% endfor %}
         </div>

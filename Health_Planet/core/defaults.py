@@ -368,10 +368,41 @@ for section_item in SECTION_LIST:
     SECTIONS.setdefault(section_item.page_slug, {})[section_item.key] = section_item
 
 FEATURES = [
-    item(icon="01", title="Climate Resilience", body="Local planning tools for heat, flooding, water safety, and continuity of essential health services."),
-    item(icon="02", title="Safe Motherhood", body="Peer circles, trusted health information, and referral support for expectant mothers and families."),
-    item(icon="03", title="Mental Health", body="Community conversations that reduce stigma and help people seek support earlier."),
-    item(icon="04", title="SRH Awareness", body="Youth-centered education for informed decisions, safer pathways, and stronger futures."),
+    item(
+        icon="01",
+        title="CLIMATE RESILIENCE & AGRICULTURE",
+        body='Training communities in climate-smart agriculture and agroforestry to boost food security.\n\nTree Planting & Reforestation: Engaging in community-driven afforestation to restore landscapes, improve biodiversity, and prevent soil erosion.\n\nWaste Segregation & Management: Implementing "waste-to-wealth" projects in peri-urban areas to convert solid waste into compost and recyclable products.',
+    ),
+    item(
+        icon="02",
+        title="WASH",
+        body="(Water, Sanitation, and Hygiene): Improving access to safe water and sanitation to build resilience against extreme weather.",
+    ),
+    item(
+        icon="03",
+        title="MENTAL HEALTH MANAGEMENT",
+        body="Integrating mental health support for communities affected by climate disasters, droughts, and poverty.",
+    ),
+    item(
+        icon="04",
+        title="SAFE MOTHERHOOD",
+        body="Family Planning & Health: Promoting sustainable population growth and reproductive health services in communities.",
+    ),
+    item(
+        icon="05",
+        title="SRH AWARENESS",
+        body="Raising awareness on sexual and reproductive health rights, family planning, and gender-based violence prevention.",
+    ),
+    item(
+        icon="06",
+        title="EPIDEMIC PREPAREDNESS",
+        body="Strengthening community readiness and response to disease outbreaks through training and early warning systems.",
+    ),
+    item(
+        icon="07",
+        title="ADVOCACY & HEALTH PROMOTIONS",
+        body="Advocating for community health rights and promoting healthy behaviours through campaigns, media, and grassroots engagement.",
+    ),
 ]
 
 IMPACT_POINTS = [
