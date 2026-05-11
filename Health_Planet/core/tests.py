@@ -54,6 +54,15 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "WASH")
         self.assertContains(response, "Water safety demonstrations")
 
+    def test_about_team_uses_staff_directory_defaults(self):
+        response = self.client.get("/about/")
+
+        self.assertContains(response, "Liyoka Liyoka")
+        self.assertContains(response, "Tawanda Nyandoro")
+        self.assertContains(response, "images/staff/liyoka-liyoka.jpg")
+        self.assertContains(response, "images/staff/tawanda-nyandoro.jpg")
+        self.assertNotContains(response, "Photo pending")
+
     def test_admin_page_content_overrides_default_content(self):
         PageContent.objects.create(
             slug="home",
