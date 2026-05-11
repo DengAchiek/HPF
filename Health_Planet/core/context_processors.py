@@ -30,13 +30,17 @@ def site_content(request):
             "navigation_items_after_focus": [
                 item for item in navigation_items if item.sort_order >= 40
             ],
-            "navigation_ctas": NavigationItem.objects.filter(
-                is_cta=True,
-                is_active=True,
-            ).order_by("sort_order", "id"),
-            "focus_area_links": FocusArea.objects.filter(is_active=True).order_by(
-                "sort_order",
-                "title",
+            "navigation_ctas": list(
+                NavigationItem.objects.filter(
+                    is_cta=True,
+                    is_active=True,
+                ).order_by("sort_order", "id")
+            ),
+            "focus_area_links": list(
+                FocusArea.objects.filter(is_active=True).order_by(
+                    "sort_order",
+                    "title",
+                )
             ),
             "footer_links": footer_links,
         }
