@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Donate | Health Planet Foundation{% endblock %}
+{% block title %}{{ page.meta_title|default:"Donate | Health Planet Foundation" }}{% endblock %}
 
 {% block content %}
-<section class="page-hero hero-donate">
+<section class="page-hero {{ page.hero_class|default:'hero-donate' }}"{% if page.image_url %} style="--page-hero-bg: url('{{ page.image_url }}');"{% endif %}>
     <div class="container page-hero-inner">
-        <p class="hero-kicker">Donate</p>
-        <h1>Your support helps communities prepare earlier and care better.</h1>
-        <p>Contributions support training, community sessions, field materials, and referral coordination.</p>
+        <p class="hero-kicker">{{ page.hero_kicker }}</p>
+        <h1>{{ page.hero_title }}</h1>
+        <p>{{ page.hero_text }}</p>
     </div>
 </section>
 
 <section class="section section-soft">
     <div class="container form-layout">
         <div class="section-copy">
-            <p class="eyebrow">Support the mission</p>
-            <h2>Choose an amount</h2>
-            <p>This demo form records your interest locally and can be connected to a payment provider when the organization is ready.</p>
+            <p class="eyebrow">{{ sections.donate_details.kicker }}</p>
+            <h2>{{ sections.donate_details.title }}</h2>
+            <p>{{ sections.donate_details.body }}</p>
             <div class="mini-stats">
-                <div><strong>25</strong><span>Field materials</span></div>
-                <div><strong>50</strong><span>Community session support</span></div>
-                <div><strong>100</strong><span>Training contribution</span></div>
+                {% for amount in amounts %}
+                <div><strong>{{ amount.amount }}</strong><span>{{ amount.label }}</span></div>
+                {% endfor %}
             </div>
             <div class="support-photo">
-                <img src="{% static 'images/im-15.jpeg' %}" alt="Program staff preparing community health materials" loading="lazy">
+                <img src="{{ sections.donate_details.image_url }}" alt="{{ sections.donate_details.image_alt }}" loading="lazy">
             </div>
         </div>
 
@@ -42,9 +42,9 @@
             <label for="amount">Donation amount</label>
             <select id="amount" name="amount" required>
                 <option value="">Select an amount</option>
-                <option value="25">USD 25</option>
-                <option value="50">USD 50</option>
-                <option value="100">USD 100</option>
+                {% for amount in amounts %}
+                <option value="{{ amount.select_value }}">USD {{ amount.amount }}</option>
+                {% endfor %}
                 <option value="custom">Custom amount</option>
             </select>
 

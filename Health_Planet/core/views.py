@@ -1,284 +1,135 @@
 from django.http import Http404
 from django.shortcuts import render
 
+from .models import (
+    CareerOpening,
+    DonationAmount,
+    FeatureCard,
+    FocusArea,
+    GalleryImage,
+    InternshipTrack,
+    NewsItem,
+    PageContent,
+    Project,
+    SectionContent,
+    StatItem,
+    TeamMember,
+)
 
-PROJECTS = [
-    {
-        "title": "Climate-Smart Clinics",
-        "description": "Helping rural health posts prepare for heat, flooding, and service disruption through local planning and practical resilience tools.",
-        "status": "Active",
-        "image": "images/im-13.jpeg",
-        "image_alt": "Health Planet Foundation team members preparing field materials",
-    },
-    {
-        "title": "Safe Motherhood Circles",
-        "description": "Community-led sessions connecting expectant mothers with health information, referral support, and trusted peer networks.",
-        "status": "Field program",
-        "image": "images/im-17.jpeg",
-        "image_alt": "Community session with mothers and health volunteers",
-    },
-    {
-        "title": "Youth Mental Wellness",
-        "description": "School and community outreach that makes mental health conversations easier, earlier, and connected to local care pathways.",
-        "status": "Growing",
-        "image": "images/im-19.jpeg",
-        "image_alt": "Young people and community leaders gathering outdoors",
-    },
-]
 
-NEWS_ITEMS = [
-    {
-        "title": "Community health volunteers expand outreach in Lusaka Province",
-        "date": "May 2026",
-        "summary": "New volunteer cohorts are supporting health talks, referrals, and preparedness conversations in high-risk communities.",
-        "image": "images/im-09.jpeg",
-        "image_alt": "Community members attending a Health Planet Foundation outreach session",
-    },
-    {
-        "title": "Climate resilience sessions reach district health teams",
-        "date": "April 2026",
-        "summary": "District teams reviewed practical response plans for heat stress, water safety, and continuity of essential services.",
-        "image": "images/im-08.jpeg",
-        "image_alt": "Field preparation work at a community site",
-    },
-    {
-        "title": "Youth wellness clubs launch a peer-support calendar",
-        "date": "March 2026",
-        "summary": "Young leaders are creating consistent spaces for mental wellness education and early help-seeking.",
-        "image": "images/im-01.jpeg",
-        "image_alt": "Youth and community members seated during an outdoor session",
-    },
-]
+def get_page(slug):
+    return PageContent.objects.filter(slug=slug).first()
 
-CAREER_OPENINGS = [
-    {
-        "role": "Community Programs Coordinator",
-        "location": "Lusaka, Zambia",
-        "type": "Full time",
-    },
-    {
-        "role": "Monitoring and Learning Assistant",
-        "location": "Hybrid",
-        "type": "Contract",
-    },
-]
 
-INTERNSHIPS = [
-    {
-        "role": "Communications Intern",
-        "focus": "Storytelling, campaigns, and partner updates",
-    },
-    {
-        "role": "Public Health Intern",
-        "focus": "Field research, community sessions, and reporting support",
-    },
-]
+def get_sections(page_slug):
+    return {
+        section.key: section
+        for section in SectionContent.objects.filter(page_slug=page_slug).order_by("key")
+    }
 
-FOCUS_AREAS = {
-    "epidemic-preparedness": {
-        "title": "Epidemic Preparedness",
-        "kicker": "Focus area",
-        "summary": "Helping communities recognize risks early, prepare local response pathways, and keep essential health information moving during outbreaks.",
-        "image": "images/im-04.jpeg",
-        "image_alt": "Volunteer supporting a household health activity",
-        "points": [
-            "Community readiness sessions",
-            "Early-warning communication",
-            "Referral and response coordination",
-        ],
-    },
-    "advocacy-and-health-promotions": {
-        "title": "Advocacy and Health Promotions",
-        "kicker": "Focus area",
-        "summary": "Supporting health education, public awareness, and trusted community conversations that help families act earlier and make informed choices.",
-        "image": "images/im-09.jpeg",
-        "image_alt": "Community members attending a Health Planet Foundation outreach session",
-        "points": [
-            "Health talks and campaigns",
-            "Youth-centered awareness",
-            "Community-led advocacy",
-        ],
-    },
-    "wash": {
-        "title": "WASH",
-        "kicker": "Focus area",
-        "summary": "Promoting practical water, sanitation, and hygiene action so families can reduce preventable health risks in everyday life.",
-        "image": "images/im-15.jpeg",
-        "image_alt": "Program staff arranging WASH and community health supplies",
-        "points": [
-            "Water safety demonstrations",
-            "Hygiene promotion",
-            "Household sanitation support",
-        ],
-    },
-}
 
-GALLERY_IMAGES = [
-    {
-        "src": "images/im-01.jpeg",
-        "alt": "Community members gathered outdoors for a Health Planet Foundation session",
-        "caption": "Outdoor health talk",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-02.jpeg",
-        "alt": "Community group gathered for a health discussion",
-        "caption": "Community dialogue",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-03.jpeg",
-        "alt": "Health Planet Foundation volunteers speaking with community members",
-        "caption": "Field outreach",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-04.jpeg",
-        "alt": "Volunteer supporting a household health activity",
-        "caption": "Household support",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-05.jpeg",
-        "alt": "Team member demonstrating handwashing and water safety materials",
-        "caption": "Practical demos",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-06.jpeg",
-        "alt": "Children and adults gathered under a tree for community programming",
-        "caption": "Local participation",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-07.jpeg",
-        "alt": "Community members receiving support during an outdoor session",
-        "caption": "Trusted presence",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-08.jpeg",
-        "alt": "Field preparation work at a community site",
-        "caption": "Site preparation",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-09.jpeg",
-        "alt": "Community members waiting during a Health Planet Foundation outreach day",
-        "caption": "Outreach day",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-10.jpeg",
-        "alt": "Health Planet Foundation staff member speaking with a mother during a home visit",
-        "caption": "Home visit",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-11.jpeg",
-        "alt": "Team member holding program supplies for community outreach",
-        "caption": "Program supplies",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-12.jpeg",
-        "alt": "Health Planet Foundation team member supporting a community health activity",
-        "caption": "Hands-on support",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-13.jpeg",
-        "alt": "Health Planet Foundation team with field materials",
-        "caption": "Prepared teams",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-14.jpeg",
-        "alt": "Health Planet Foundation team with field supplies",
-        "caption": "Field supplies",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-15.jpeg",
-        "alt": "Program staff arranging community health supplies",
-        "caption": "Field materials",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-16.jpeg",
-        "alt": "Intern supporting a community health activity",
-        "caption": "Learning through service",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-17.jpeg",
-        "alt": "Community session with mothers and health volunteers",
-        "caption": "Motherhood circle",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-18.jpeg",
-        "alt": "Health Planet Foundation team speaking with community members",
-        "caption": "Community meeting",
-        "focus": "focus-center",
-    },
-    {
-        "src": "images/im-19.jpeg",
-        "alt": "Young people and community leaders gathering outdoors",
-        "caption": "Youth engagement",
-        "focus": "focus-upper",
-    },
-    {
-        "src": "images/im-20.jpeg",
-        "alt": "Health Planet Foundation volunteer supporting bedside care",
-        "caption": "Care support",
-        "focus": "focus-upper",
-    },
-]
+def base_page_context(slug):
+    return {
+        "page": get_page(slug),
+        "sections": get_sections(slug),
+    }
 
 
 def home(request):
-    context = {
-        "projects": PROJECTS,
-        "news_items": NEWS_ITEMS[:2],
-        "gallery_images": GALLERY_IMAGES,
-    }
+    context = base_page_context("home")
+    context.update(
+        {
+            "features": FeatureCard.objects.filter(
+                section_key="home_features",
+                is_active=True,
+            ),
+            "stats": StatItem.objects.filter(is_active=True),
+            "impact_points": FeatureCard.objects.filter(
+                section_key="home_impact_points",
+                is_active=True,
+            ),
+            "projects": Project.objects.filter(is_active=True).order_by("sort_order", "id"),
+            "news_items": NewsItem.objects.filter(is_active=True).order_by("sort_order", "id")[:2],
+            "gallery_images": GalleryImage.objects.filter(
+                gallery_key="home_gallery",
+                is_active=True,
+            ).order_by("sort_order", "id"),
+        }
+    )
     return render(request, "home.html", context)
 
 
 def about(request):
-    return render(request, "about.html")
+    context = base_page_context("about")
+    context.update(
+        {
+            "about_slides": GalleryImage.objects.filter(
+                gallery_key="about_slideshow",
+                is_active=True,
+            ).order_by("sort_order", "id"),
+            "work_features": FeatureCard.objects.filter(
+                section_key="about_work",
+                is_active=True,
+            ),
+            "management_team": TeamMember.objects.filter(
+                team=TeamMember.TEAM_MANAGEMENT,
+                is_active=True,
+            ),
+            "board_members": TeamMember.objects.filter(
+                team=TeamMember.TEAM_BOARD,
+                is_active=True,
+            ),
+        }
+    )
+    return render(request, "about.html", context)
 
 
 def projects(request):
-    return render(request, "projects.html", {"projects": PROJECTS})
+    context = base_page_context("projects")
+    context["projects"] = Project.objects.filter(is_active=True).order_by("sort_order", "id")
+    return render(request, "projects.html", context)
 
 
 def focus_area(request, slug):
-    area = FOCUS_AREAS.get(slug)
+    area = FocusArea.objects.filter(slug=slug, is_active=True).first()
     if area is None:
         raise Http404("Focus area not found")
 
-    return render(request, "focus_area.html", {"area": area})
+    context = base_page_context("focus_area")
+    context["area"] = area
+    return render(request, "focus_area.html", context)
 
 
 def news(request):
-    return render(request, "news.html", {"news_items": NEWS_ITEMS})
+    context = base_page_context("news")
+    context["news_items"] = NewsItem.objects.filter(is_active=True).order_by("sort_order", "id")
+    return render(request, "news.html", context)
 
 
 def careers(request):
-    return render(request, "careers.html", {"openings": CAREER_OPENINGS})
+    context = base_page_context("careers")
+    context["openings"] = CareerOpening.objects.filter(is_active=True)
+    return render(request, "careers.html", context)
 
 
 def internships(request):
-    return render(request, "internships.html", {"internships": INTERNSHIPS})
+    context = base_page_context("internships")
+    context["internships"] = InternshipTrack.objects.filter(is_active=True)
+    return render(request, "internships.html", context)
 
 
 def donate(request):
-    context = {"submitted": request.method == "POST"}
+    context = base_page_context("donate")
+    context.update(
+        {
+            "amounts": DonationAmount.objects.filter(is_active=True),
+            "submitted": request.method == "POST",
+        }
+    )
     return render(request, "donate.html", context)
 
 
 def contact(request):
-    context = {"submitted": request.method == "POST"}
+    context = base_page_context("contact")
+    context["submitted"] = request.method == "POST"
     return render(request, "contact.html", context)

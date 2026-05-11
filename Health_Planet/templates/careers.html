@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Careers | Health Planet Foundation{% endblock %}
+{% block title %}{{ page.meta_title|default:"Careers | Health Planet Foundation" }}{% endblock %}
 
 {% block content %}
-<section class="page-hero hero-careers">
+<section class="page-hero {{ page.hero_class|default:'hero-careers' }}"{% if page.image_url %} style="--page-hero-bg: url('{{ page.image_url }}');"{% endif %}>
     <div class="container page-hero-inner">
-        <p class="hero-kicker">Careers</p>
-        <h1>Work with a team focused on practical community health impact.</h1>
-        <p>We look for people who listen carefully, move with integrity, and care about the details that make programs last.</p>
+        <p class="hero-kicker">{{ page.hero_kicker }}</p>
+        <h1>{{ page.hero_title }}</h1>
+        <p>{{ page.hero_text }}</p>
     </div>
 </section>
 
 <section class="section careers-intro">
     <div class="container split-layout">
         <div class="section-copy">
-            <p class="eyebrow">Team culture</p>
-            <h2>Work close to the communities we serve.</h2>
-            <p>Our team values respectful field practice, clear reporting, and patient relationship-building with partners and families.</p>
+            <p class="eyebrow">{{ sections.careers_intro.kicker }}</p>
+            <h2>{{ sections.careers_intro.title }}</h2>
+            <p>{{ sections.careers_intro.body }}</p>
         </div>
         <div class="image-feature">
-            <img src="{% static 'images/im-19.jpeg' %}" alt="Health Planet Foundation staff and community members gathered outdoors" loading="lazy">
-            <div class="image-caption">Community-centered work</div>
+            <img src="{{ sections.careers_intro.image_url }}" alt="{{ sections.careers_intro.image_alt }}" loading="lazy">
+            <div class="image-caption">{{ sections.careers_intro.image_caption }}</div>
         </div>
     </div>
 </section>
@@ -29,14 +29,14 @@
 <section class="section section-soft">
     <div class="container">
         <div class="section-title">
-            <h2>Open roles</h2>
-            <p>Join field-aware work across programs, learning, communications, and partner support.</p>
+            <h2>{{ sections.careers_roles.title }}</h2>
+            <p>{{ sections.careers_roles.body }}</p>
         </div>
 
         <div class="opportunity-list">
             {% for opening in openings %}
             <article class="opportunity-card">
-                <span>{{ opening.type }}</span>
+                <span>{{ opening.employment_type }}</span>
                 <div>
                     <h3>{{ opening.role }}</h3>
                     <p>{{ opening.location }}</p>

@@ -418,7 +418,7 @@ textarea {
     padding: 58px 0 126px;
     background:
         linear-gradient(rgba(22, 56, 31, 0.56), rgba(22, 56, 31, 0.56)),
-        url("/static/images/im-01.jpeg") center center / cover no-repeat;
+        var(--hero-bg, url("/static/images/im-01.jpeg")) center center / cover no-repeat;
     color: var(--white);
     text-align: center;
 }
@@ -955,56 +955,56 @@ textarea {
     overflow: hidden;
     background:
         linear-gradient(rgba(22, 56, 31, 0.64), rgba(22, 56, 31, 0.64)),
-        url("/static/images/hero-health.png") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/hero-health.png")) center center / cover no-repeat;
     text-align: center;
 }
 
 .page-hero.hero-about {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-09.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-09.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-projects {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-13.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-13.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-news {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-17.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-17.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-careers {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-19.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-19.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-internships {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-16.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-16.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-donate {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-15.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-15.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-contact {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-18.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-18.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero.hero-focus {
     background:
         linear-gradient(rgba(22, 56, 31, 0.66), rgba(22, 56, 31, 0.66)),
-        url("/static/images/im-05.jpeg") center center / cover no-repeat;
+        var(--page-hero-bg, url("/static/images/im-05.jpeg")) center center / cover no-repeat;
 }
 
 .page-hero::after {
@@ -1305,6 +1305,35 @@ textarea {
 
 .about-slide-dots span:nth-child(3) {
     animation-delay: 12s;
+}
+
+.about-slideshow.is-managed .about-slide,
+.about-slideshow.is-managed .about-slide img,
+.about-slideshow.is-managed .about-slide-dots span {
+    animation: none;
+}
+
+.about-slideshow.is-managed .about-slide {
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}
+
+.about-slideshow.is-managed .about-slide.is-active {
+    opacity: 1;
+}
+
+.about-slideshow.is-managed .about-slide img {
+    transform: scale(1.04);
+    transition: transform 6s ease;
+}
+
+.about-slideshow.is-managed .about-slide.is-active img {
+    transform: scale(1.1);
+}
+
+.about-slideshow.is-managed .about-slide-dots span.is-active {
+    background: var(--white);
+    transform: scale(1.28);
 }
 
 @keyframes about-slide-fade {

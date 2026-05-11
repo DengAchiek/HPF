@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Health Planet Foundation | Community Resilience{% endblock %}
+{% block title %}{{ page.meta_title|default:"Health Planet Foundation | Community Resilience" }}{% endblock %}
 
 {% block content %}
-<section class="home-hero" aria-labelledby="home-title">
+<section class="home-hero" aria-labelledby="home-title"{% if page.image_url %} style="--hero-bg: url('{{ page.image_url }}');"{% endif %}>
     <div class="container hero-inner">
-        <p class="hero-kicker">Health, climate, and dignity</p>
-        <h1 id="home-title">Health Planet Foundation</h1>
-        <p>Helping communities prepare for climate risk while strengthening maternal health, youth wellness, and trusted public health action.</p>
+        <p class="hero-kicker">{{ page.hero_kicker }}</p>
+        <h1 id="home-title">{{ page.hero_title }}</h1>
+        <p>{{ page.hero_text }}</p>
         <div class="hero-actions">
-            <a class="button button-primary" href="{% url 'projects' %}">Explore programs</a>
-            <a class="button button-outline" href="{% url 'donate' %}">Support the work</a>
+            <a class="button button-primary" href="{{ sections.home_hero_primary.button_href }}">{{ sections.home_hero_primary.button_label }}</a>
+            <a class="button button-outline" href="{{ sections.home_hero_secondary.button_href }}">{{ sections.home_hero_secondary.button_label }}</a>
         </div>
     </div>
 </section>
@@ -19,76 +19,50 @@
 <section class="feature-area" aria-labelledby="focus-title">
     <div class="container feature-panel">
         <div class="section-title">
-            <h2 id="focus-title">What we do</h2>
-            <p>Community programs built around prevention, preparedness, and care people can actually reach.</p>
+            <h2 id="focus-title">{{ sections.home_features.title }}</h2>
+            <p>{{ sections.home_features.body }}</p>
         </div>
 
         <div class="feature-grid">
+            {% for feature in features %}
             <article class="feature-card">
-                <span class="feature-icon">01</span>
-                <h3>Climate Resilience</h3>
-                <p>Local planning tools for heat, flooding, water safety, and continuity of essential health services.</p>
+                <span class="feature-icon">{{ feature.icon }}</span>
+                <h3>{{ feature.title }}</h3>
+                <p>{{ feature.body }}</p>
             </article>
-            <article class="feature-card">
-                <span class="feature-icon">02</span>
-                <h3>Safe Motherhood</h3>
-                <p>Peer circles, trusted health information, and referral support for expectant mothers and families.</p>
-            </article>
-            <article class="feature-card">
-                <span class="feature-icon">03</span>
-                <h3>Mental Health</h3>
-                <p>Community conversations that reduce stigma and help people seek support earlier.</p>
-            </article>
-            <article class="feature-card">
-                <span class="feature-icon">04</span>
-                <h3>SRH Awareness</h3>
-                <p>Youth-centered education for informed decisions, safer pathways, and stronger futures.</p>
-            </article>
+            {% endfor %}
         </div>
     </div>
 </section>
 
 <section class="counter-band" aria-label="Program highlights">
     <div class="container counter-grid">
+        {% for stat in stats %}
         <div class="counter-card">
-            <span>Focus areas</span>
-            <strong>4</strong>
-            <p>Integrated public health priorities</p>
+            <span>{{ stat.label }}</span>
+            <strong>{{ stat.value }}</strong>
+            <p>{{ stat.description }}</p>
         </div>
-        <div class="counter-card">
-            <span>Partners</span>
-            <strong>12+</strong>
-            <p>Community and district collaborators</p>
-        </div>
-        <div class="counter-card">
-            <span>Programs</span>
-            <strong>3</strong>
-            <p>Current projects in motion</p>
-        </div>
-        <div class="counter-card">
-            <span>Year</span>
-            <strong>2026</strong>
-            <p>Expansion and learning cycle</p>
-        </div>
+        {% endfor %}
     </div>
 </section>
 
 <section class="section why-area">
     <div class="container split-layout why-layout">
         <div class="section-copy">
-            <p class="eyebrow">Why it matters</p>
-            <h2>Prepared communities, healthier families</h2>
-            <p>Climate pressure is already changing how families access safe water, maternal care, mental health support, and reliable health information. Our work connects those needs through practical community-led action.</p>
+            <p class="eyebrow">{{ sections.home_why.kicker }}</p>
+            <h2>{{ sections.home_why.title }}</h2>
+            <p>{{ sections.home_why.body }}</p>
             <div class="impact-points" aria-label="Program strengths">
-                <span>Early planning</span>
-                <span>Trusted referrals</span>
-                <span>Local leadership</span>
+                {% for point in impact_points %}
+                <span>{{ point.title }}</span>
+                {% endfor %}
             </div>
-            <a class="button button-dark compact-button" href="{% url 'about' %}">Learn more</a>
+            <a class="button button-dark compact-button" href="{{ sections.home_why.button_href }}">{{ sections.home_why.button_label }}</a>
         </div>
         <div class="image-feature" aria-label="Community health field work">
-            <img src="{% static 'images/im-12.jpeg' %}" alt="Health Planet Foundation team member supporting a community health activity">
-            <div class="image-caption">Community readiness in practice</div>
+            <img src="{{ sections.home_why.image_url }}" alt="{{ sections.home_why.image_alt }}">
+            <div class="image-caption">{{ sections.home_why.image_caption }}</div>
         </div>
     </div>
 </section>
@@ -96,24 +70,24 @@
 <section class="section field-gallery-section">
     <div class="container">
         <div class="section-title">
-            <h2>Community work in action</h2>
-            <p>Real moments from outreach, demonstrations, field preparation, and community health conversations.</p>
+            <h2>{{ sections.home_gallery.title }}</h2>
+            <p>{{ sections.home_gallery.body }}</p>
         </div>
 
         <div class="photo-carousel" aria-label="Health Planet Foundation field photo carousel">
             <div class="photo-track">
                 <div class="photo-sequence">
                     {% for image in gallery_images %}
-                    <figure class="photo-card {{ image.focus }}">
-                        <img src="{% static image.src %}" alt="{{ image.alt }}" loading="lazy">
+                    <figure class="photo-card {{ image.focus_class }}">
+                        <img src="{{ image.image_url }}" alt="{{ image.image_alt }}" loading="lazy">
                         <figcaption>{{ image.caption }}</figcaption>
                     </figure>
                     {% endfor %}
                 </div>
                 <div class="photo-sequence" aria-hidden="true">
                     {% for image in gallery_images %}
-                    <figure class="photo-card {{ image.focus }}">
-                        <img src="{% static image.src %}" alt="" loading="lazy">
+                    <figure class="photo-card {{ image.focus_class }}">
+                        <img src="{{ image.image_url }}" alt="" loading="lazy">
                         <figcaption>{{ image.caption }}</figcaption>
                     </figure>
                     {% endfor %}
@@ -126,15 +100,15 @@
 <section class="section section-soft">
     <div class="container">
         <div class="section-title">
-            <h2>Current projects</h2>
-            <p>Each project is designed with community partners and grounded in practical, local action.</p>
+            <h2>{{ sections.home_projects.title }}</h2>
+            <p>{{ sections.home_projects.body }}</p>
         </div>
 
         <div class="project-grid">
             {% for project in projects %}
             <article class="project-card has-image">
                 <figure class="card-photo">
-                    <img src="{% static project.image %}" alt="{{ project.image_alt }}" loading="lazy">
+                    <img src="{{ project.image_url }}" alt="{{ project.image_alt }}" loading="lazy">
                 </figure>
                 <span>{{ project.status }}</span>
                 <h3>{{ project.title }}</h3>
@@ -149,17 +123,17 @@
 <section class="section">
     <div class="container">
         <div class="section-title">
-            <h2>Updates from community teams</h2>
-            <p>Stories from volunteers, district teams, and young leaders working across health and climate priorities.</p>
+            <h2>{{ sections.home_updates.title }}</h2>
+            <p>{{ sections.home_updates.body }}</p>
         </div>
 
         <div class="project-grid">
             {% for item in news_items %}
             <article class="project-card update-card has-image">
                 <figure class="card-photo">
-                    <img src="{% static item.image %}" alt="{{ item.image_alt }}" loading="lazy">
+                    <img src="{{ item.image_url }}" alt="{{ item.image_alt }}" loading="lazy">
                 </figure>
-                <span>{{ item.date }}</span>
+                <span>{{ item.date_label }}</span>
                 <h3>{{ item.title }}</h3>
                 <p>{{ item.summary }}</p>
                 <a class="text-link" href="{% url 'news' %}">Read update</a>
@@ -172,10 +146,10 @@
 <section class="contact-cta">
     <div class="container cta-panel">
         <div>
-            <p class="eyebrow">Get involved</p>
-            <h2>Help communities stay prepared, supported, and healthy.</h2>
+            <p class="eyebrow">{{ sections.home_cta.kicker }}</p>
+            <h2>{{ sections.home_cta.title }}</h2>
         </div>
-        <a class="button button-primary" href="{% url 'contact' %}">Start a partnership</a>
+        <a class="button button-primary" href="{{ sections.home_cta.button_href }}">{{ sections.home_cta.button_label }}</a>
     </div>
 </section>
 {% endblock %}

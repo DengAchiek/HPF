@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ area.title }} | Health Planet Foundation{% endblock %}
+{% block title %}{{ area.title }} | {{ site_settings.organization_name|default:"Health Planet Foundation" }}{% endblock %}
 
 {% block content %}
-<section class="page-hero hero-focus">
+<section class="page-hero {{ page.hero_class|default:'hero-focus' }}"{% if area.image_url %} style="--page-hero-bg: url('{{ area.image_url }}');"{% endif %}>
     <div class="container page-hero-inner">
         <p class="hero-kicker">{{ area.kicker }}</p>
         <h1>{{ area.title }}</h1>
@@ -15,8 +15,8 @@
 <section class="section section-soft">
     <div class="container split-layout">
         <div class="section-copy">
-            <p class="eyebrow">Program priority</p>
-            <h2>Practical action built around community needs.</h2>
+            <p class="eyebrow">{{ area.priority_kicker }}</p>
+            <h2>{{ area.priority_title }}</h2>
             <p>{{ area.summary }}</p>
             <div class="impact-points" aria-label="{{ area.title }} priorities">
                 {% for point in area.points %}
@@ -26,7 +26,7 @@
             <a class="button button-dark compact-button" href="{% url 'contact' %}">Partner with us</a>
         </div>
         <div class="image-feature">
-            <img src="{% static area.image %}" alt="{{ area.image_alt }}" loading="lazy">
+            <img src="{{ area.image_url }}" alt="{{ area.image_alt }}" loading="lazy">
             <div class="image-caption">{{ area.title }}</div>
         </div>
     </div>
@@ -35,10 +35,10 @@
 <section class="contact-cta">
     <div class="container cta-panel">
         <div>
-            <p class="eyebrow">Focus areas</p>
-            <h2>Work with Health Planet Foundation to strengthen community health readiness.</h2>
+            <p class="eyebrow">{{ sections.focus_cta.kicker }}</p>
+            <h2>{{ sections.focus_cta.title }}</h2>
         </div>
-        <a class="button button-primary" href="{% url 'projects' %}">Explore projects</a>
+        <a class="button button-primary" href="{{ sections.focus_cta.button_href }}">{{ sections.focus_cta.button_label }}</a>
     </div>
 </section>
 {% endblock %}

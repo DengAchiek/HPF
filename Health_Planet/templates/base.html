@@ -4,20 +4,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Health Planet Foundation advances community health, climate resilience, safe motherhood, and mental wellness.">
-    <title>{% block title %}Health Planet Foundation{% endblock %}</title>
+    <meta name="description" content="{{ site_settings.footer_about|default:'Health Planet Foundation advances community health, climate resilience, safe motherhood, and mental wellness.' }}">
+    <title>{% block title %}{{ site_settings.organization_name|default:"Health Planet Foundation" }}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260509-about-carousel1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260510-admin-cms1">
 </head>
 <body class="route-{{ request.resolver_match.url_name|default:'page' }}">
 <a class="skip-link" href="#main-content">Skip to content</a>
 
 <header class="site-header" role="banner">
     <div class="container nav-shell">
-        <div class="brand" aria-label="Health Planet Foundation">
-            <img class="brand-logo" src="{% static 'images/HPF-logo.jpeg' %}" alt="Health Planet Foundation logo" width="56" height="56">
+        <div class="brand" aria-label="{{ site_settings.organization_name|default:'Health Planet Foundation' }}">
+            <img class="brand-logo" src="{{ site_settings.logo_url|default:'/static/images/HPF-logo.jpeg' }}" alt="{{ site_settings.organization_name|default:'Health Planet Foundation' }} logo" width="56" height="56">
         </div>
 
         <button class="nav-toggle" type="button" aria-label="Open navigation menu" aria-controls="primary-navigation" aria-expanded="false">
@@ -27,28 +27,29 @@
         </button>
 
         <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation">
-            <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
-            <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
-            <a href="{% url 'projects' %}" class="{% if request.resolver_match.url_name == 'projects' %}active{% endif %}">Projects</a>
+            {% for item in navigation_items_before_focus %}
+            <a href="{{ item.href }}" class="{% if request.resolver_match.url_name == item.url_name %}active{% endif %}">{{ item.label }}</a>
+            {% endfor %}
             <div class="nav-dropdown {% if request.resolver_match.url_name == 'focus_area' %}active{% endif %}">
                 <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="focus-areas-menu">
-                    Focus Areas
+                    {{ site_settings.focus_dropdown_label|default:"Focus Areas" }}
                     <span aria-hidden="true">&#9662;</span>
                 </button>
                 <div class="nav-dropdown-menu" id="focus-areas-menu">
-                    <a href="{% url 'focus_area' 'epidemic-preparedness' %}" class="{% if request.resolver_match.kwargs.slug == 'epidemic-preparedness' %}active{% endif %}">Epidemic Preparedness</a>
-                    <a href="{% url 'focus_area' 'advocacy-and-health-promotions' %}" class="{% if request.resolver_match.kwargs.slug == 'advocacy-and-health-promotions' %}active{% endif %}">Advocacy and Health Promotions</a>
-                    <a href="{% url 'focus_area' 'wash' %}" class="{% if request.resolver_match.kwargs.slug == 'wash' %}active{% endif %}">WASH</a>
+                    {% for area in focus_area_links %}
+                    <a href="{% url 'focus_area' area.slug %}" class="{% if request.resolver_match.kwargs.slug == area.slug %}active{% endif %}">{{ area.title }}</a>
+                    {% endfor %}
                 </div>
             </div>
-            <a href="{% url 'news' %}" class="{% if request.resolver_match.url_name == 'news' %}active{% endif %}">News</a>
-            <a href="{% url 'careers' %}" class="{% if request.resolver_match.url_name == 'careers' %}active{% endif %}">Careers</a>
-            <a href="{% url 'internships' %}" class="{% if request.resolver_match.url_name == 'internships' %}active{% endif %}">Internships</a>
-            <a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+            {% for item in navigation_items_after_focus %}
+            <a href="{{ item.href }}" class="{% if request.resolver_match.url_name == item.url_name %}active{% endif %}">{{ item.label }}</a>
+            {% endfor %}
         </nav>
 
         <div class="nav-actions" aria-label="Support">
-            <a class="nav-cta" href="{% url 'donate' %}">Donate</a>
+            {% for item in navigation_ctas %}
+            <a class="nav-cta" href="{{ item.href }}">{{ item.label }}</a>
+            {% endfor %}
         </div>
     </div>
 </header>
@@ -60,39 +61,40 @@
 <footer class="site-footer">
     <div class="container footer-grid">
         <div class="footer-about">
-            <div class="footer-logo" aria-label="Health Planet Foundation">
-                <img class="footer-logo-img" src="{% static 'images/HPF-logo.jpeg' %}" alt="Health Planet Foundation logo" width="68" height="68">
-                <span>Health Planet Foundation</span>
+            <div class="footer-logo" aria-label="{{ site_settings.organization_name|default:'Health Planet Foundation' }}">
+                <img class="footer-logo-img" src="{{ site_settings.logo_url|default:'/static/images/HPF-logo.jpeg' }}" alt="{{ site_settings.organization_name|default:'Health Planet Foundation' }} logo" width="68" height="68">
+                <span>{{ site_settings.organization_name|default:"Health Planet Foundation" }}</span>
             </div>
-            <p>Building healthier, more resilient communities through climate readiness, maternal health, youth wellness, and trusted local partnerships.</p>
+            <p>{{ site_settings.footer_about|default:"Building healthier, more resilient communities through climate readiness, maternal health, youth wellness, and trusted local partnerships." }}</p>
         </div>
 
         <div class="footer-block">
             <h2>Programs</h2>
-            <a href="{% url 'projects' %}">Climate resilience</a>
-            <a href="{% url 'projects' %}">Safe motherhood</a>
-            <a href="{% url 'projects' %}">Mental wellness</a>
+            {% for link in footer_links.programs %}
+            <a href="{{ link.href }}">{{ link.label }}</a>
+            {% endfor %}
         </div>
 
         <div class="footer-block">
             <h2>Organization</h2>
-            <a href="{% url 'about' %}">About</a>
-            <a href="{% url 'careers' %}">Careers</a>
-            <a href="{% url 'internships' %}">Internships</a>
+            {% for link in footer_links.organization %}
+            <a href="{{ link.href }}">{{ link.label }}</a>
+            {% endfor %}
         </div>
 
         <div class="footer-block">
             <h2>Contact</h2>
-            <p>Healthy Planet Foundation Zambia</p>
-            <p>Lusaka, Zambia</p>
-            <a href="mailto:healthyplanetfoundation@gmail.com">healthyplanetfoundation@gmail.com</a>
-            <a href="tel:+260971693902">+260971693902</a>
-            <a href="{% url 'contact' %}">Partner with us</a>
-            <a href="{% url 'donate' %}">Donate</a>
+            <p>{{ site_settings.contact_name|default:"Healthy Planet Foundation Zambia" }}</p>
+            <p>{{ site_settings.location|default:"Lusaka, Zambia" }}</p>
+            {% if site_settings.email %}<a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>{% endif %}
+            {% if site_settings.phone %}<a href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>{% endif %}
+            {% for link in footer_links.contact %}
+            <a href="{{ link.href }}">{{ link.label }}</a>
+            {% endfor %}
         </div>
     </div>
     <div class="container footer-bottom">
-        <p>&copy; 2026 Health Planet Foundation. All rights reserved.</p>
+        <p>{{ site_settings.copyright_text|default:"© 2026 Health Planet Foundation. All rights reserved." }}</p>
     </div>
 </footer>
 <script>
@@ -161,6 +163,36 @@
             if (window.innerWidth > 700) {
                 setDropdown(false);
                 setMenu(false);
+            }
+        });
+
+        document.querySelectorAll(".about-slideshow").forEach(function (slideshow) {
+            const slides = Array.from(slideshow.querySelectorAll(".about-slide"));
+            const dots = Array.from(slideshow.querySelectorAll(".about-slide-dots span"));
+            let activeIndex = 0;
+
+            if (!slides.length) {
+                return;
+            }
+
+            slideshow.classList.add("is-managed");
+
+            function showSlide(index) {
+                activeIndex = index % slides.length;
+                slides.forEach(function (slide, slideIndex) {
+                    slide.classList.toggle("is-active", slideIndex === activeIndex);
+                });
+                dots.forEach(function (dot, dotIndex) {
+                    dot.classList.toggle("is-active", dotIndex === activeIndex);
+                });
+            }
+
+            showSlide(0);
+
+            if (slides.length > 1) {
+                window.setInterval(function () {
+                    showSlide(activeIndex + 1);
+                }, 6000);
             }
         });
     })();

@@ -3,7 +3,7 @@ services:
     name: hpf
     runtime: python
     buildCommand: pip install -r requirements.txt && python Health_Planet/manage.py collectstatic --noinput
-    startCommand: gunicorn --chdir Health_Planet Health_Planet.wsgi:application
+    startCommand: python Health_Planet/manage.py migrate --noinput && gunicorn --chdir Health_Planet Health_Planet.wsgi:application
     envVars:
       - key: DEBUG
         value: "False"

@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Projects | Health Planet Foundation{% endblock %}
+{% block title %}{{ page.meta_title|default:"Projects | Health Planet Foundation" }}{% endblock %}
 
 {% block content %}
-<section class="page-hero hero-projects">
+<section class="page-hero {{ page.hero_class|default:'hero-projects' }}"{% if page.image_url %} style="--page-hero-bg: url('{{ page.image_url }}');"{% endif %}>
     <div class="container page-hero-inner">
-        <p class="hero-kicker">Projects</p>
-        <h1>Programs designed for health systems, families, and young people.</h1>
-        <p>Our projects focus on prevention, preparedness, and trusted community support.</p>
+        <p class="hero-kicker">{{ page.hero_kicker }}</p>
+        <h1>{{ page.hero_title }}</h1>
+        <p>{{ page.hero_text }}</p>
     </div>
 </section>
 
 <section class="section section-soft">
     <div class="container">
         <div class="section-title">
-            <h2>Current programs</h2>
-            <p>Field-ready work shaped by partners, public health teams, and community leaders.</p>
+            <h2>{{ sections.projects_list.title }}</h2>
+            <p>{{ sections.projects_list.body }}</p>
         </div>
 
         <div class="project-grid">
             {% for project in projects %}
             <article class="project-card project-card-large has-image">
                 <figure class="card-photo">
-                    <img src="{% static project.image %}" alt="{{ project.image_alt }}" loading="lazy">
+                    <img src="{{ project.image_url }}" alt="{{ project.image_alt }}" loading="lazy">
                 </figure>
                 <span>{{ project.status }}</span>
                 <h3>{{ project.title }}</h3>
