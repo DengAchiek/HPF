@@ -1,4 +1,5 @@
-from django.test import TestCase
+from django.contrib.admin.sites import AdminSite
+from django.test import RequestFactory, TestCase
 
 from .models import (
     CareerOpening,
@@ -11,6 +12,7 @@ from .models import (
     NavigationItem,
     NewsItem,
     PageContent,
+    PartnerLogo,
     Project,
     SectionContent,
     SiteSettings,
@@ -70,6 +72,21 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "images/staff/liyoka-liyoka.jpg")
         self.assertContains(response, "images/staff/tawanda-nyandoro.jpg")
         self.assertNotContains(response, "Photo pending")
+
+    def test_partner_logo_proxy_targets_home_partners(self):
+        from .admin import PartnerLogoAdmin
+
+        logo = PartnerLogo(
+            caption="Admin Partner",
+            static_image="images/partners/admin-partner.png",
+        )
+        request = RequestFactory().post("/admin/core/partnerlogo/add/")
+        PartnerLogoAdmin(PartnerLogo, AdminSite()).save_model(request, logo, form=None, change=False)
+
+        logo.refresh_from_db()
+        self.assertEqual(logo.gallery_key, "home_partners")
+        response = self.client.get("/")
+        self.assertContains(response, "Admin Partner")
 
     def test_admin_page_content_overrides_default_content(self):
         PageContent.objects.create(

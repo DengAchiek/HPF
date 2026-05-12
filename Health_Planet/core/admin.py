@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import (
     CareerOpening,
@@ -11,6 +12,7 @@ from .models import (
     NavigationItem,
     NewsItem,
     PageContent,
+    PartnerLogo,
     Project,
     SectionContent,
     SiteSettings,
@@ -115,6 +117,57 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_display = ("caption", "gallery_key", "focus_class", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
     list_filter = ("gallery_key", "is_active")
+
+
+@admin.register(PartnerLogo)
+class PartnerLogoAdmin(admin.ModelAdmin):
+    list_display = ("caption", "logo_preview", "static_image", "sort_order", "is_active")
+    list_editable = ("sort_order", "is_active")
+    search_fields = ("caption", "image_alt", "static_image")
+    fieldsets = (
+        (
+            "Partner",
+            {
+                "fields": (
+                    "caption",
+                    "image",
+                    "static_image",
+                    "image_alt",
+                )
+            },
+        ),
+        (
+            "Display",
+            {
+                "fields": (
+                    "focus_class",
+                    "sort_order",
+                    "is_active",
+                )
+            },
+        ),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(gallery_key="home_partners")
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        initial.setdefault("focus_class", "partner-wide")
+        return initial
+
+    def save_model(self, request, obj, form, change):
+        obj.gallery_key = "home_partners"
+        super().save_model(request, obj, form, change)
+
+    @admin.display(description="Logo")
+    def logo_preview(self, obj):
+        if not obj.image_url:
+            return "No logo"
+        return format_html(
+            '<img src="{}" alt="" style="max-width: 160px; max-height: 54px; object-fit: contain;">',
+            obj.image_url,
+        )
 
 
 @admin.register(TeamMember)

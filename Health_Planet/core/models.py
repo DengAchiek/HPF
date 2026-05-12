@@ -226,6 +226,13 @@ class GalleryImage(ImageMixin, ActiveOrderedModel):
         return self.caption or self.static_image or self.image.name
 
 
+class PartnerLogo(GalleryImage):
+    class Meta:
+        proxy = True
+        verbose_name = "Home partner logo"
+        verbose_name_plural = "Home partner logos"
+
+
 class TeamMember(ActiveOrderedModel):
     TEAM_MANAGEMENT = "management"
     TEAM_BOARD = "board"
