@@ -253,6 +253,13 @@ SECTION_LIST = [
     ),
     section(
         "home",
+        "home_partners",
+        kicker="Partners",
+        title="Our partners",
+        body="Health Planet Foundation works alongside public institutions and implementing partners to strengthen community health, resilience, and public service delivery.",
+    ),
+    section(
+        "home",
         "home_cta",
         kicker="Get involved",
         title="Help communities stay prepared, supported, and healthy.",
@@ -428,6 +435,45 @@ NEWS_ITEMS = [
     item(title="Community health volunteers expand outreach in Lusaka Province", date_label="May 2026", summary="New volunteer cohorts are supporting health talks, referrals, and preparedness conversations in high-risk communities.", image_url=image_url("images/im-09.jpeg"), image_alt="Community members attending a Health Planet Foundation outreach session"),
     item(title="Climate resilience sessions reach district health teams", date_label="April 2026", summary="District teams reviewed practical response plans for heat stress, water safety, and continuity of essential services.", image_url=image_url("images/im-08.jpeg"), image_alt="Field preparation work at a community site"),
     item(title="Youth wellness clubs launch a peer-support calendar", date_label="March 2026", summary="Young leaders are creating consistent spaces for mental wellness education and early help-seeking.", image_url=image_url("images/im-01.jpeg"), image_alt="Youth and community members seated during an outdoor session"),
+]
+
+PARTNERS = [
+    item(
+        image_url=image_url("images/partners/ministry-health.svg"),
+        image_alt="Ministry of Health logo",
+        caption="Ministry of Health",
+        focus_class="partner-wide",
+    ),
+    item(
+        image_url=image_url("images/partners/rana.svg"),
+        image_alt="RANA logo",
+        caption="RANA",
+        focus_class="partner-wide",
+    ),
+    item(
+        image_url=image_url("images/partners/resolve-to-save-lives.svg"),
+        image_alt="Resolve to Save Lives logo",
+        caption="Resolve to Save Lives",
+        focus_class="partner-wide",
+    ),
+    item(
+        image_url=image_url("images/partners/thrive-aid.svg"),
+        image_alt="Thrive Aid logo",
+        caption="Thrive Aid",
+        focus_class="partner-square",
+    ),
+    item(
+        image_url=image_url("images/partners/ministry-community-development-social-services.svg"),
+        image_alt="Ministry of Community Development and Social Services logo",
+        caption="Ministry of Community Development and Social Services",
+        focus_class="partner-wide",
+    ),
+    item(
+        image_url=image_url("images/partners/ministry-green-economy-environment.svg"),
+        image_alt="Ministry of Green Economy and Environment logo",
+        caption="Ministry of Green Economy and Environment",
+        focus_class="partner-wide",
+    ),
 ]
 
 GALLERY_IMAGES = [

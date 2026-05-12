@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 260" role="img" aria-labelledby="title desc">
+  <title id="title">Ministry of Green Economy and Environment</title>
+  <desc id="desc">Partner logo for the Ministry of Green Economy and Environment</desc>
+  <rect width="880" height="260" fill="#ffffff"/>
+  <g transform="translate(24 30) scale(.9)">
+    <path d="M95 6 155 34 146 118 95 178 44 118 35 34Z" fill="#f7faf5" stroke="#1f1f1f" stroke-width="3"/>
+    <path d="M58 50c18 12 54 12 74 0v72c-22 18-52 18-74 0Z" fill="#111"/>
+    <path d="M72 54c8 13 8 53 0 66M94 58c9 18 9 42 0 60M116 54c8 13 8 53 0 66" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+    <path d="M50 22c19-22 71-22 90 0" fill="none" stroke="#b98020" stroke-width="9" stroke-linecap="round"/>
+    <path d="M94 0 73 23h42Z" fill="#b98020"/>
+    <path d="M18 84c16 4 25 26 21 52-4 24-19 42-35 38 19-20 16-69 14-90Z" fill="#f0bd34" stroke="#1f1f1f" stroke-width="2"/>
+    <path d="M172 84c-16 4-25 26-21 52 4 24 19 42 35 38-19-20-16-69-14-90Z" fill="#d24f3d" stroke="#1f1f1f" stroke-width="2"/>
+    <path d="M39 180h112l-26 18H65Z" fill="#5a8a55"/>
+  </g>
+  <text x="214" y="78" font-family="Arial, Helvetica, sans-serif" font-size="51" font-weight="900" fill="#050505">MINISTRY OF</text>
+  <text x="214" y="141" font-family="Arial, Helvetica, sans-serif" font-size="51" font-weight="900" fill="#050505">GREEN ECONOMY</text>
+  <text x="214" y="204" font-family="Arial, Helvetica, sans-serif" font-size="51" font-weight="900" fill="#050505">&amp;ENVIRONMENT</text>
+</svg>

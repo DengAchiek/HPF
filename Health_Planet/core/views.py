@@ -103,6 +103,13 @@ def home(request):
                 ).order_by("sort_order", "id"),
                 defaults.GALLERY_IMAGES,
             ),
+            "partners": list_or_default(
+                GalleryImage.objects.filter(
+                    gallery_key="home_partners",
+                    is_active=True,
+                ).order_by("sort_order", "id"),
+                defaults.PARTNERS,
+            ),
         }
     )
     return render(request, "home.html", context)

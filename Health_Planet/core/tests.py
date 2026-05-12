@@ -48,6 +48,12 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "CLIMATE RESILIENCE &amp; AGRICULTURE")
         self.assertContains(response, "Waste Segregation &amp; Management")
         self.assertContains(response, "ADVOCACY &amp; HEALTH PROMOTIONS")
+        self.assertContains(response, "Our partners")
+        self.assertContains(response, "Ministry of Health logo")
+        self.assertContains(response, "RANA logo")
+        self.assertContains(response, "Resolve to Save Lives logo")
+        self.assertContains(response, "Thrive Aid logo")
+        self.assertContains(response, "Ministry of Green Economy and Environment logo")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
 
     def test_focus_area_uses_default_content_when_admin_content_is_empty(self):
