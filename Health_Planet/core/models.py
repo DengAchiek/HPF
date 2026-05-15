@@ -1,6 +1,7 @@
 from django.db import models
 from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
+from django.utils.text import slugify
 
 
 class ActiveOrderedModel(models.Model):
@@ -209,15 +210,53 @@ class Project(ImageMixin, ActiveOrderedModel):
 
 
 class NewsItem(ImageMixin, ActiveOrderedModel):
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
     title = models.CharField(max_length=180)
     date_label = models.CharField(max_length=80, blank=True)
     event_date = models.DateField(blank=True, null=True)
     venue = models.CharField(max_length=180, blank=True)
     participants = models.CharField(max_length=255, blank=True)
     summary = models.TextField()
+    body = models.TextField(
+        blank=True,
+        help_text="Optional long-form article content. Use blank lines to separate paragraphs.",
+    )
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)[:180] or "news"
+            slug = base_slug
+            counter = 2
+            while NewsItem.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    @property
+    def detail_href(self):
+        if not self.slug:
+            return reverse("news")
+        return reverse("news_detail", kwargs={"slug": self.slug})
+
+    @property
+    def article_body(self):
+        return self.body or self.summary
+
+
+class NewsImage(ImageMixin, ActiveOrderedModel):
+    news_item = models.ForeignKey(
+        NewsItem,
+        related_name="gallery_images",
+        on_delete=models.CASCADE,
+    )
+    caption = models.CharField(max_length=180, blank=True)
+
+    def __str__(self):
+        return self.caption or self.image_alt or self.static_image or f"Image for {self.news_item}"
 
 
 class GalleryImage(ImageMixin, ActiveOrderedModel):

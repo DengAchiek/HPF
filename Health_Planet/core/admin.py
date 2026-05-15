@@ -9,6 +9,7 @@ from .models import (
     FooterLink,
     GalleryImage,
     InternshipTrack,
+    NewsImage,
     NavigationItem,
     NewsItem,
     PageContent,
@@ -105,10 +106,17 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ("title", "description", "status")
 
 
+class NewsImageInline(admin.TabularInline):
+    model = NewsImage
+    extra = 1
+    fields = ("image", "static_image", "image_alt", "caption", "sort_order", "is_active")
+
+
 @admin.register(NewsItem)
 class NewsItemAdmin(admin.ModelAdmin):
     list_display = (
         "title",
+        "slug",
         "date_label",
         "event_date",
         "venue",
@@ -118,14 +126,18 @@ class NewsItemAdmin(admin.ModelAdmin):
     )
     list_editable = ("sort_order", "is_active")
     list_filter = ("is_active", "event_date")
-    search_fields = ("title", "summary", "date_label", "venue", "participants")
+    prepopulated_fields = {"slug": ("title",)}
+    search_fields = ("title", "summary", "body", "date_label", "venue", "participants")
+    inlines = (NewsImageInline,)
     fieldsets = (
         (
             "News content",
             {
                 "fields": (
                     "title",
+                    "slug",
                     "summary",
+                    "body",
                     "date_label",
                     "event_date",
                     "venue",

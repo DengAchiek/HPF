@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ item.title }} | News | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<article class="news-article">
+    <section class="article-hero"{% if item.image_url %} style="--article-hero-bg: url('{{ item.image_url }}');"{% endif %}>
+        <div class="container article-hero-inner">
+            <a class="article-back-link" href="{% url 'news' %}">News</a>
+            <div class="news-meta article-meta" aria-label="News details">
+                {% if item.date_label %}
+                <span>{{ item.date_label }}</span>
+                {% elif item.event_date %}
+                <span>{{ item.event_date|date:"F j, Y" }}</span>
+                {% endif %}
+                {% if item.venue %}<span>{{ item.venue }}</span>{% endif %}
+                {% if item.participants %}<span>{{ item.participants }}</span>{% endif %}
+            </div>
+            <h1>{{ item.title }}</h1>
+            <p>{{ item.summary }}</p>
+        </div>
+    </section>
+
+    <section class="section article-section">
+        <div class="container article-layout">
+            <div class="article-main">
+                {% if gallery_images %}
+                <div class="article-gallery" aria-label="News photo gallery">
+                    {% for image in gallery_images %}
+                    <figure class="article-gallery-item{% if forloop.first %} article-gallery-lead{% endif %}">
+                        <img src="{{ image.image_url }}" alt="{{ image.image_alt }}" loading="lazy">
+                        {% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}
+                    </figure>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="article-copy">
+                    {{ article_body|linebreaks }}
+                </div>
+            </div>
+
+            <aside class="article-sidebar" aria-label="Related news">
+                <div class="article-sidebar-card">
+                    <p class="eyebrow">Newsroom</p>
+                    <h2>More updates</h2>
+                    {% for related in related_news %}
+                    <a class="related-news-link" href="{{ related.detail_href }}">
+                        {% if related.date_label %}
+                        <span>{{ related.date_label }}</span>
+                        {% elif related.event_date %}
+                        <span>{{ related.event_date|date:"F j, Y" }}</span>
+                        {% endif %}
+                        <strong>{{ related.title }}</strong>
+                    </a>
+                    {% endfor %}
+                </div>
+            </aside>
+        </div>
+    </section>
+</article>
+{% endblock %}

@@ -183,6 +183,52 @@ def news(request):
     return render(request, "news.html", context)
 
 
+def find_default_news_item(slug):
+    for item in defaults.NEWS_ITEMS:
+        if getattr(item, "slug", "") == slug:
+            return item
+    return None
+
+
+def news_detail(request, slug):
+    item = safe_first(
+        NewsItem.objects.prefetch_related("gallery_images").filter(slug=slug, is_active=True)
+    )
+
+    if item:
+        gallery_images = safe_list(
+            item.gallery_images.filter(is_active=True).order_by("sort_order", "id")
+        )
+        related_news = safe_list(
+            NewsItem.objects.filter(is_active=True)
+            .exclude(pk=item.pk)
+            .order_by("sort_order", "id")[:3]
+        )
+        article_body = item.article_body
+    else:
+        item = find_default_news_item(slug)
+        if item is None:
+            raise Http404("News item not found")
+        gallery_images = getattr(item, "gallery_images", [])
+        related_news = [
+            related_item
+            for related_item in defaults.NEWS_ITEMS
+            if getattr(related_item, "slug", "") != slug
+        ][:3]
+        article_body = getattr(item, "body", "") or item.summary
+
+    context = base_page_context("news")
+    context.update(
+        {
+            "item": item,
+            "article_body": article_body,
+            "gallery_images": gallery_images,
+            "related_news": related_news,
+        }
+    )
+    return render(request, "news_detail.html", context)
+
+
 def careers(request):
     context = base_page_context("careers")
     context["openings"] = list_or_default(

@@ -12,6 +12,7 @@ from .models import (
     GalleryImage,
     InternshipTrack,
     NavigationItem,
+    NewsImage,
     NewsItem,
     PageContent,
     PartnerLogo,
@@ -112,15 +113,16 @@ class PublicContentFallbackTests(TestCase):
         )
 
     def test_news_event_details_are_optional_and_render_when_present(self):
-        NewsItem.objects.create(
+        plain_item = NewsItem.objects.create(
             title="Admin news without event details",
             summary="This update can be saved with only the required news fields.",
             is_active=True,
             sort_order=1,
         )
-        NewsItem.objects.create(
+        detailed_item = NewsItem.objects.create(
             title="Admin news with event details",
             summary="This update includes the optional event details.",
+            body="The first paragraph gives readers more context.\n\nThe second paragraph adds detail.",
             date_label="1 May 2026",
             event_date=date(2026, 5, 1),
             venue="Lusaka, Zambia",
@@ -128,12 +130,41 @@ class PublicContentFallbackTests(TestCase):
             is_active=True,
             sort_order=2,
         )
+        NewsImage.objects.create(
+            news_item=detailed_item,
+            static_image="images/im-01.jpeg",
+            image_alt="Community gathering",
+            caption="Community partners in session",
+            is_active=True,
+            sort_order=1,
+        )
 
         response = self.client.get("/news/")
 
         self.assertContains(response, "Admin news without event details")
         self.assertContains(response, "Admin news with event details")
+        self.assertContains(response, plain_item.detail_href)
+        self.assertContains(response, detailed_item.detail_href)
+        self.assertContains(response, "Read More")
         self.assertContains(response, "1 May 2026")
         self.assertContains(response, "Lusaka, Zambia")
-        self.assertContains(response, "Community health partners")
         self.assertNotContains(response, "None")
+
+        detail_response = self.client.get(detailed_item.detail_href)
+
+        self.assertContains(detail_response, "Admin news with event details")
+        self.assertContains(detail_response, "Community health partners")
+        self.assertContains(detail_response, "The first paragraph gives readers more context.")
+        self.assertContains(detail_response, "The second paragraph adds detail.")
+        self.assertContains(detail_response, "images/im-01.jpeg")
+
+    def test_default_news_detail_uses_seeded_article_content(self):
+        response = self.client.get(
+            "/news/rana-bootcamp-advances-epidemic-preparedness-across-africa/"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "RANA Bootcamp advances epidemic preparedness across Africa")
+        self.assertContains(response, "community-engaged disease surveillance")
+        self.assertContains(response, "images/news/rana-bootcamp-2026.jpg")
+        self.assertContains(response, "images/news/rana-bootcamp-2026-group.jpg")

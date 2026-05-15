@@ -29,6 +29,7 @@ urlpatterns = [
     path("projects/", views.projects, name="projects"),
     path("focus-areas/<slug:slug>/", views.focus_area, name="focus_area"),
     path("news/", views.news, name="news"),
+    path("news/<slug:slug>/", views.news_detail, name="news_detail"),
     path("careers/", views.careers, name="careers"),
     path("internships/", views.internships, name="internships"),
     path("donate/", views.donate, name="donate"),

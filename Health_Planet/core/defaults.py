@@ -58,6 +58,48 @@ def section(
     )
 
 
+def gallery_image(static_image, image_alt="", caption="", sort_order=0):
+    return item(
+        static_image=static_image,
+        image_alt=image_alt,
+        caption=caption,
+        sort_order=sort_order,
+        image_url=image_url(static_image),
+    )
+
+
+def news_item(
+    slug,
+    title,
+    date_label,
+    summary,
+    static_image,
+    image_alt,
+    event_date=None,
+    venue="",
+    participants="",
+    body="",
+    gallery_images=None,
+):
+    return item(
+        slug=slug,
+        title=title,
+        date_label=date_label,
+        event_date=event_date,
+        venue=venue,
+        participants=participants,
+        summary=summary,
+        body=body or summary,
+        static_image=static_image,
+        image_alt=image_alt,
+        image_url=image_url(static_image),
+        detail_href=f"/news/{slug}/",
+        gallery_images=gallery_images or [
+            gallery_image(static_image, image_alt, title, 10),
+        ],
+    )
+
+
 def page(slug, title, meta_title, hero_class, hero_kicker, hero_title, hero_text, static_image):
     return item(
         slug=slug,
@@ -433,29 +475,94 @@ PROJECTS = [
 ]
 
 NEWS_ITEMS = [
-    item(
+    news_item(
+        slug="rana-bootcamp-advances-epidemic-preparedness-across-africa",
         title="RANA Bootcamp advances epidemic preparedness across Africa",
         date_label="28-30 April 2026",
         event_date=date(2026, 4, 28),
         venue="The Tribe Hotel, Nairobi, Kenya",
         participants="Civil society and community organizations from 11 African countries",
         summary="The Resilience Action Network Africa (RANA), in partnership with Resolve to Save Lives, convened civil society and community organizations from 11 African countries to establish a shared agenda for epidemic preparedness and community-engaged disease surveillance. HFPZ was represented by Executive Director Doreen McGeachy.",
-        image_url=image_url("images/news/rana-bootcamp-2026.jpg"),
+        body="The Resilience Action Network Africa (RANA), in partnership with Resolve to Save Lives, convened civil society and community organizations from 11 African countries for a focused bootcamp on epidemic preparedness and community-engaged disease surveillance.\n\nHeld at The Tribe Hotel in Nairobi, Kenya from 28 to 30 April 2026, the bootcamp created space for organizations to align on a shared agenda for stronger disease surveillance ecosystems across Africa.\n\nThe discussions took place alongside the World Health Summit Regional Meeting and contributed to the Declaration for an Enabling Disease Surveillance Ecosystem, emphasizing collaboration, readiness, and community trust.\n\nHealth Planet Foundation Zambia was represented by Executive Director Doreen McGeachy, who contributed to the continental dialogue on practical approaches for preparedness and response.",
+        static_image="images/news/rana-bootcamp-2026.jpg",
         image_alt="Plenary session at the RANA Bootcamp in Nairobi",
+        gallery_images=[
+            gallery_image(
+                "images/news/rana-bootcamp-2026.jpg",
+                "Plenary session at the RANA Bootcamp in Nairobi",
+                "RANA Bootcamp plenary session",
+                10,
+            ),
+            gallery_image(
+                "images/news/rana-bootcamp-2026-group.jpg",
+                "Participants at the RANA Bootcamp in Nairobi",
+                "Regional partners gathered in Nairobi",
+                20,
+            ),
+        ],
     ),
-    item(
+    news_item(
+        slug="hpfz-joins-continental-dialogue-on-demographic-dividend-and-reproductive-health",
         title="HFPZ joins continental dialogue on demographic dividend and reproductive health",
         date_label="8-10 April 2026",
         event_date=date(2026, 4, 8),
         venue="Intercontinental Hotel, Lusaka, Zambia",
         participants="Over 200 delegates from across Africa",
         summary="The 1st Continental Conference for Non-State Actors on the Demographic Dividend and Reproductive Health brought together civil society, academia, private sector leaders, and youth advocates. HFPZ Programs Manager Nolia Chipundo participated in the dialogue supporting the Lusaka 2026 Call for Action.",
-        image_url=image_url("images/news/continental-conference-lusaka-2026.jpg"),
+        body="The 1st Continental Conference for Non-State Actors on the Demographic Dividend and Reproductive Health was held from 8 to 10 April 2026 at the Intercontinental Hotel in Lusaka, Zambia.\n\nThe conference brought together more than 200 delegates from across Africa, including civil society organizations, academia, private sector leaders, and youth advocates.\n\nConvening partners included AUDA-NEPAD, Med Rap Zambia, UNAIDS, and the University of Zambia. The key outcome was the Lusaka 2026 Call for Action, which strengthened the role of non-state actors in advancing demographic dividend and reproductive health priorities.\n\nHealth Planet Foundation Zambia was represented by Programs Manager Nolia Chipundo. The event closed with a 5km solidarity walk from Pamodzi Hotel to the University of Zambia.",
+        static_image="images/news/continental-conference-lusaka-2026.jpg",
         image_alt="Delegates at the continental conference plenary session in Lusaka",
+        gallery_images=[
+            gallery_image(
+                "images/news/continental-conference-lusaka-2026.jpg",
+                "Delegates at the continental conference plenary session in Lusaka",
+                "Conference plenary session",
+                10,
+            ),
+            gallery_image(
+                "images/news/continental-conference-lusaka-2026-panel.jpg",
+                "Panel discussion at the continental conference in Lusaka",
+                "Panel dialogue",
+                20,
+            ),
+            gallery_image(
+                "images/news/continental-conference-lusaka-2026-delegates.jpg",
+                "Delegates participating in the continental conference",
+                "Delegates in session",
+                30,
+            ),
+            gallery_image(
+                "images/news/continental-conference-lusaka-2026-walk.jpg",
+                "Solidarity walk during the continental conference",
+                "Solidarity walk",
+                40,
+            ),
+        ],
     ),
-    item(title="Community health volunteers expand outreach in Lusaka Province", date_label="May 2026", summary="New volunteer cohorts are supporting health talks, referrals, and preparedness conversations in high-risk communities.", image_url=image_url("images/im-09.jpeg"), image_alt="Community members attending a Health Planet Foundation outreach session"),
-    item(title="Climate resilience sessions reach district health teams", date_label="April 2026", summary="District teams reviewed practical response plans for heat stress, water safety, and continuity of essential services.", image_url=image_url("images/im-08.jpeg"), image_alt="Field preparation work at a community site"),
-    item(title="Youth wellness clubs launch a peer-support calendar", date_label="March 2026", summary="Young leaders are creating consistent spaces for mental wellness education and early help-seeking.", image_url=image_url("images/im-01.jpeg"), image_alt="Youth and community members seated during an outdoor session"),
+    news_item(
+        slug="community-health-volunteers-expand-outreach-in-lusaka-province",
+        title="Community health volunteers expand outreach in Lusaka Province",
+        date_label="May 2026",
+        summary="New volunteer cohorts are supporting health talks, referrals, and preparedness conversations in high-risk communities.",
+        static_image="images/im-09.jpeg",
+        image_alt="Community members attending a Health Planet Foundation outreach session",
+    ),
+    news_item(
+        slug="climate-resilience-sessions-reach-district-health-teams",
+        title="Climate resilience sessions reach district health teams",
+        date_label="April 2026",
+        summary="District teams reviewed practical response plans for heat stress, water safety, and continuity of essential services.",
+        static_image="images/im-08.jpeg",
+        image_alt="Field preparation work at a community site",
+    ),
+    news_item(
+        slug="youth-wellness-clubs-launch-a-peer-support-calendar",
+        title="Youth wellness clubs launch a peer-support calendar",
+        date_label="March 2026",
+        summary="Young leaders are creating consistent spaces for mental wellness education and early help-seeking.",
+        static_image="images/im-01.jpeg",
+        image_alt="Youth and community members seated during an outdoor session",
+    ),
 ]
 
 PARTNERS = [
