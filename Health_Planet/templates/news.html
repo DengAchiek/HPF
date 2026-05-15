@@ -21,7 +21,7 @@
 
         <div class="news-board">
             {% for item in news_items %}
-            <article class="news-story-card{% if forloop.first %} news-story-featured{% endif %}">
+            <article class="news-story-card">
                 <a class="news-story-image" href="{{ item.detail_href }}" aria-label="Read more about {{ item.title }}">
                     <img src="{{ item.image_url }}" alt="{{ item.image_alt }}" loading="lazy">
                 </a>

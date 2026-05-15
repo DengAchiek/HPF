@@ -60,8 +60,13 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "Thrive Aid logo")
         self.assertContains(response, "Ministry of Green Economy and Environment logo")
         self.assertContains(response, "RANA Bootcamp advances epidemic preparedness across Africa")
-        self.assertContains(response, "The Tribe Hotel, Nairobi, Kenya")
-        self.assertContains(response, "Intercontinental Hotel, Lusaka, Zambia")
+        self.assertContains(
+            response,
+            "/news/rana-bootcamp-advances-epidemic-preparedness-across-africa/",
+        )
+        self.assertContains(response, "Read update")
+        self.assertNotContains(response, "The Tribe Hotel, Nairobi, Kenya")
+        self.assertNotContains(response, "Intercontinental Hotel, Lusaka, Zambia")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
 
     def test_focus_area_uses_default_content_when_admin_content_is_empty(self):
