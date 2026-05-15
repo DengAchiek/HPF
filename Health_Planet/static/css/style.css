@@ -783,8 +783,6 @@ textarea {
     width: 100%;
     overflow: hidden;
     padding: 8px 0 22px;
-    mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
 }
 
 .photo-track {
@@ -2460,8 +2458,6 @@ textarea:focus {
     .photo-carousel {
         width: calc(100% + 24px);
         margin-left: -12px;
-        mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
-        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
     }
 
     .photo-card {
