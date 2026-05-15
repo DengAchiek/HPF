@@ -211,6 +211,9 @@ class Project(ImageMixin, ActiveOrderedModel):
 class NewsItem(ImageMixin, ActiveOrderedModel):
     title = models.CharField(max_length=180)
     date_label = models.CharField(max_length=80, blank=True)
+    event_date = models.DateField(blank=True, null=True)
+    venue = models.CharField(max_length=180, blank=True)
+    participants = models.CharField(max_length=255, blank=True)
     summary = models.TextField()
 
     def __str__(self):

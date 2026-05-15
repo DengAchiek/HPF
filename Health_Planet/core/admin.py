@@ -107,9 +107,35 @@ class ProjectAdmin(admin.ModelAdmin):
 
 @admin.register(NewsItem)
 class NewsItemAdmin(admin.ModelAdmin):
-    list_display = ("title", "date_label", "sort_order", "is_active")
+    list_display = (
+        "title",
+        "date_label",
+        "event_date",
+        "venue",
+        "participants",
+        "sort_order",
+        "is_active",
+    )
     list_editable = ("sort_order", "is_active")
-    search_fields = ("title", "summary")
+    list_filter = ("is_active", "event_date")
+    search_fields = ("title", "summary", "date_label", "venue", "participants")
+    fieldsets = (
+        (
+            "News content",
+            {
+                "fields": (
+                    "title",
+                    "summary",
+                    "date_label",
+                    "event_date",
+                    "venue",
+                    "participants",
+                )
+            },
+        ),
+        ("Image", {"fields": ("image", "static_image", "image_alt")}),
+        ("Publishing", {"fields": ("sort_order", "is_active")}),
+    )
 
 
 @admin.register(GalleryImage)

@@ -1,3 +1,4 @@
+from datetime import date
 from types import SimpleNamespace
 
 from django.templatetags.static import static
@@ -432,6 +433,26 @@ PROJECTS = [
 ]
 
 NEWS_ITEMS = [
+    item(
+        title="RANA Bootcamp advances epidemic preparedness across Africa",
+        date_label="28-30 April 2026",
+        event_date=date(2026, 4, 28),
+        venue="The Tribe Hotel, Nairobi, Kenya",
+        participants="Civil society and community organizations from 11 African countries",
+        summary="The Resilience Action Network Africa (RANA), in partnership with Resolve to Save Lives, convened civil society and community organizations from 11 African countries to establish a shared agenda for epidemic preparedness and community-engaged disease surveillance. HFPZ was represented by Executive Director Doreen McGeachy.",
+        image_url=image_url("images/news/rana-bootcamp-2026.jpg"),
+        image_alt="Plenary session at the RANA Bootcamp in Nairobi",
+    ),
+    item(
+        title="HFPZ joins continental dialogue on demographic dividend and reproductive health",
+        date_label="8-10 April 2026",
+        event_date=date(2026, 4, 8),
+        venue="Intercontinental Hotel, Lusaka, Zambia",
+        participants="Over 200 delegates from across Africa",
+        summary="The 1st Continental Conference for Non-State Actors on the Demographic Dividend and Reproductive Health brought together civil society, academia, private sector leaders, and youth advocates. HFPZ Programs Manager Nolia Chipundo participated in the dialogue supporting the Lusaka 2026 Call for Action.",
+        image_url=image_url("images/news/continental-conference-lusaka-2026.jpg"),
+        image_alt="Delegates at the continental conference plenary session in Lusaka",
+    ),
     item(title="Community health volunteers expand outreach in Lusaka Province", date_label="May 2026", summary="New volunteer cohorts are supporting health talks, referrals, and preparedness conversations in high-risk communities.", image_url=image_url("images/im-09.jpeg"), image_alt="Community members attending a Health Planet Foundation outreach session"),
     item(title="Climate resilience sessions reach district health teams", date_label="April 2026", summary="District teams reviewed practical response plans for heat stress, water safety, and continuity of essential services.", image_url=image_url("images/im-08.jpeg"), image_alt="Field preparation work at a community site"),
     item(title="Youth wellness clubs launch a peer-support calendar", date_label="March 2026", summary="Young leaders are creating consistent spaces for mental wellness education and early help-seeking.", image_url=image_url("images/im-01.jpeg"), image_alt="Youth and community members seated during an outdoor session"),

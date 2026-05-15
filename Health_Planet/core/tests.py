@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.admin.sites import AdminSite
 from django.test import RequestFactory, TestCase
 
@@ -56,6 +58,9 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "Resolve to Save Lives logo")
         self.assertContains(response, "Thrive Aid logo")
         self.assertContains(response, "Ministry of Green Economy and Environment logo")
+        self.assertContains(response, "RANA Bootcamp advances epidemic preparedness across Africa")
+        self.assertContains(response, "The Tribe Hotel, Nairobi, Kenya")
+        self.assertContains(response, "Intercontinental Hotel, Lusaka, Zambia")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
 
     def test_focus_area_uses_default_content_when_admin_content_is_empty(self):
@@ -105,3 +110,30 @@ class PublicContentFallbackTests(TestCase):
             response,
             '<h1 id="home-title">Health Planet Foundation</h1>',
         )
+
+    def test_news_event_details_are_optional_and_render_when_present(self):
+        NewsItem.objects.create(
+            title="Admin news without event details",
+            summary="This update can be saved with only the required news fields.",
+            is_active=True,
+            sort_order=1,
+        )
+        NewsItem.objects.create(
+            title="Admin news with event details",
+            summary="This update includes the optional event details.",
+            date_label="1 May 2026",
+            event_date=date(2026, 5, 1),
+            venue="Lusaka, Zambia",
+            participants="Community health partners",
+            is_active=True,
+            sort_order=2,
+        )
+
+        response = self.client.get("/news/")
+
+        self.assertContains(response, "Admin news without event details")
+        self.assertContains(response, "Admin news with event details")
+        self.assertContains(response, "1 May 2026")
+        self.assertContains(response, "Lusaka, Zambia")
+        self.assertContains(response, "Community health partners")
+        self.assertNotContains(response, "None")

@@ -133,7 +133,14 @@
                 <figure class="card-photo">
                     <img src="{{ item.image_url }}" alt="{{ item.image_alt }}" loading="lazy">
                 </figure>
-                <span>{{ item.date_label }}</span>
+                <div class="news-meta compact" aria-label="News details">
+                    {% if item.date_label %}
+                    <span>{{ item.date_label }}</span>
+                    {% elif item.event_date %}
+                    <span>{{ item.event_date|date:"F j, Y" }}</span>
+                    {% endif %}
+                    {% if item.venue %}<span>{{ item.venue }}</span>{% endif %}
+                </div>
                 <h3>{{ item.title }}</h3>
                 <p>{{ item.summary }}</p>
                 <a class="text-link" href="{% url 'news' %}">Read update</a>

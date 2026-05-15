@@ -853,6 +853,34 @@ textarea {
     -webkit-backdrop-filter: blur(10px);
 }
 
+.news-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 14px;
+}
+
+.news-meta span {
+    position: relative;
+    line-height: 1.35;
+}
+
+.news-meta span + span {
+    padding-left: 12px;
+}
+
+.news-meta span + span::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    transform: translateY(-50%);
+}
+
 @keyframes photo-carousel-scroll {
     from {
         transform: translateX(0);
