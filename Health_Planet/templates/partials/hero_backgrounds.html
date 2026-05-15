@@ -1,0 +1,13 @@
+{% load static %}
+<div class="hero-bg-carousel" aria-hidden="true">
+    {% if primary_image %}
+    <span style="--hero-slide-bg: url('{{ primary_image }}');"></span>
+    {% else %}
+    <span style="--hero-slide-bg: url('{% static 'images/im-01.jpeg' %}');"></span>
+    {% endif %}
+    <span style="--hero-slide-bg: url('{% static 'images/im-01.jpeg' %}');"></span>
+    <span style="--hero-slide-bg: url('{% static 'images/im-09.jpeg' %}');"></span>
+    <span style="--hero-slide-bg: url('{% static 'images/im-12.jpeg' %}');"></span>
+    <span style="--hero-slide-bg: url('{% static 'images/im-17.jpeg' %}');"></span>
+    <span style="--hero-slide-bg: url('{% static 'images/im-18.jpeg' %}');"></span>
+</div>

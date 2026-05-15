@@ -5,6 +5,7 @@
 
 {% block content %}
 <section class="page-hero {{ page.hero_class|default:'hero-projects' }}"{% if page.image_url %} style="--page-hero-bg: url('{{ page.image_url }}');"{% endif %}>
+    {% include "partials/hero_backgrounds.html" with primary_image=page.image_url %}
     <div class="container page-hero-inner">
         <p class="hero-kicker">{{ page.hero_kicker }}</p>
         <h1>{{ page.hero_title }}</h1>

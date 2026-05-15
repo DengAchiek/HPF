@@ -409,6 +409,66 @@ textarea {
     color: var(--white);
 }
 
+.hero-bg-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.hero-bg-carousel span {
+    position: absolute;
+    inset: 0;
+    display: block;
+    opacity: 0;
+    background-image: var(--hero-bg-overlay), var(--hero-slide-bg);
+    background-position: center center, var(--hero-slide-position, center center);
+    background-repeat: no-repeat;
+    background-size: auto, cover;
+    transform: scale(1);
+    animation: hero-bg-cycle 36s ease-in-out infinite;
+    will-change: opacity, transform;
+}
+
+.hero-bg-carousel span:first-child {
+    opacity: 1;
+}
+
+.hero-bg-carousel span:nth-child(2) {
+    animation-delay: 6s;
+}
+
+.hero-bg-carousel span:nth-child(3) {
+    animation-delay: 12s;
+}
+
+.hero-bg-carousel span:nth-child(4) {
+    animation-delay: 18s;
+}
+
+.hero-bg-carousel span:nth-child(5) {
+    animation-delay: 24s;
+}
+
+.hero-bg-carousel span:nth-child(6) {
+    animation-delay: 30s;
+}
+
+@keyframes hero-bg-cycle {
+    0%,
+    16% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    22%,
+    100% {
+        opacity: 0;
+        transform: scale(1.06);
+    }
+}
+
 .home-hero {
     position: relative;
     display: grid;
@@ -421,6 +481,8 @@ textarea {
         var(--hero-bg, url("/static/images/im-01.jpeg")) center center / cover no-repeat;
     color: var(--white);
     text-align: center;
+    --hero-bg-overlay: linear-gradient(rgba(22, 56, 31, 0.56), rgba(22, 56, 31, 0.56));
+    --hero-slide-position: center center;
 }
 
 .home-hero::after {
@@ -783,6 +845,7 @@ textarea {
     width: 100%;
     overflow: hidden;
     padding: 8px 0 22px;
+    background: var(--brand-deep);
 }
 
 .photo-track {
@@ -799,9 +862,9 @@ textarea {
 .photo-sequence {
     display: flex;
     flex: 0 0 auto;
-    gap: 22px;
+    gap: 0;
     min-width: max-content;
-    padding-right: 22px;
+    padding-right: 0;
 }
 
 .photo-card {
@@ -809,13 +872,14 @@ textarea {
     flex: 0 0 clamp(260px, 27vw, 390px);
     height: clamp(290px, 31vw, 390px);
     margin: 0;
-    border-radius: 10px;
-    background: var(--soft);
-    box-shadow: var(--shadow);
+    border-radius: 0;
+    background: var(--brand-deep);
+    box-shadow: none;
     overflow: hidden;
 }
 
 .photo-card img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1058,6 +1122,8 @@ textarea {
         linear-gradient(90deg, rgba(10, 30, 18, 0.86), rgba(10, 30, 18, 0.54)),
         var(--article-hero-bg, url("/static/images/im-17.jpeg")) center center / cover no-repeat;
     color: var(--white);
+    --hero-bg-overlay: linear-gradient(90deg, rgba(10, 30, 18, 0.86), rgba(10, 30, 18, 0.54));
+    --hero-slide-position: center center;
 }
 
 .article-hero::after {
@@ -1410,6 +1476,8 @@ textarea {
         linear-gradient(rgba(22, 56, 31, 0.64), rgba(22, 56, 31, 0.64)),
         var(--page-hero-bg, url("/static/images/hero-health.png")) center center / cover no-repeat;
     text-align: center;
+    --hero-bg-overlay: linear-gradient(rgba(22, 56, 31, 0.64), rgba(22, 56, 31, 0.64));
+    --hero-slide-position: center center;
 }
 
 .page-hero.hero-about {
@@ -1428,6 +1496,8 @@ textarea {
     background:
         linear-gradient(rgba(22, 56, 31, 0.72), rgba(22, 56, 31, 0.72)),
         var(--page-hero-bg, url("/static/images/im-17.jpeg")) center 42% / cover no-repeat;
+    --hero-bg-overlay: linear-gradient(rgba(22, 56, 31, 0.72), rgba(22, 56, 31, 0.72));
+    --hero-slide-position: center 42%;
 }
 
 .page-hero.hero-careers {
@@ -2506,6 +2576,16 @@ textarea:focus {
 
     .photo-track {
         animation: none;
+    }
+
+    .hero-bg-carousel span {
+        animation: none;
+        opacity: 0;
+        transform: none;
+    }
+
+    .hero-bg-carousel span:first-child {
+        opacity: 1;
     }
 
     .about-slide,

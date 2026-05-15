@@ -6,6 +6,7 @@
 {% block content %}
 <article class="news-article">
     <section class="article-hero"{% if item.image_url %} style="--article-hero-bg: url('{{ item.image_url }}');"{% endif %}>
+        {% include "partials/hero_backgrounds.html" with primary_image=item.image_url %}
         <div class="container article-hero-inner">
             <a class="article-back-link" href="{% url 'news' %}">News</a>
             <div class="news-meta article-meta" aria-label="News details">
