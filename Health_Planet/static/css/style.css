@@ -790,7 +790,7 @@ textarea {
 .photo-track {
     display: flex;
     width: max-content;
-    animation: photo-carousel-scroll 92s linear infinite;
+    animation: photo-carousel-scroll 138s linear infinite;
     will-change: transform;
 }
 
@@ -800,7 +800,9 @@ textarea {
 
 .photo-sequence {
     display: flex;
+    flex: 0 0 auto;
     gap: 22px;
+    min-width: max-content;
     padding-right: 22px;
 }
 
@@ -1234,7 +1236,7 @@ textarea {
     }
 
     to {
-        transform: translateX(-50%);
+        transform: translateX(-33.333333%);
     }
 }
 

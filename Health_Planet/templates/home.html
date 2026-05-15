@@ -92,6 +92,14 @@
                     </figure>
                     {% endfor %}
                 </div>
+                <div class="photo-sequence" aria-hidden="true">
+                    {% for image in gallery_images %}
+                    <figure class="photo-card {{ image.focus_class }}">
+                        <img src="{{ image.image_url }}" alt="" loading="lazy">
+                        <figcaption>{{ image.caption }}</figcaption>
+                    </figure>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
