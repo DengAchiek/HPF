@@ -255,6 +255,79 @@ PAGES = {
     ),
 }
 
+HERO_SLIDES = {
+    "home": [
+        gallery_image("images/im-01.jpeg", "Community members gathered outdoors for a Health Planet Foundation session", "Outdoor health talk"),
+        gallery_image("images/im-02.jpeg", "Community group gathered for a health discussion", "Community dialogue"),
+        gallery_image("images/im-03.jpeg", "Health Planet Foundation volunteers speaking with community members", "Field outreach"),
+        gallery_image("images/im-06.jpeg", "Children and adults gathered under a tree for community programming", "Local participation"),
+        gallery_image("images/im-07.jpeg", "Community members receiving support during an outdoor session", "Trusted presence"),
+        gallery_image("images/im-12.jpeg", "Health Planet Foundation team member supporting a community health activity", "Hands-on support"),
+    ],
+    "about": [
+        gallery_image("images/im-09.jpeg", "Community members attending a Health Planet Foundation outreach session", "Outreach day"),
+        gallery_image("images/im-10.jpeg", "Health Planet Foundation staff member speaking with a mother during a home visit", "Home visit"),
+        gallery_image("images/im-11.jpeg", "Team member holding program supplies for community outreach", "Program supplies"),
+        gallery_image("images/im-20.jpeg", "Health Planet Foundation volunteer supporting bedside care", "Care support"),
+    ],
+    "projects": [
+        gallery_image("images/im-13.jpeg", "Health Planet Foundation team with field materials", "Prepared teams"),
+        gallery_image("images/im-14.jpeg", "Health Planet Foundation team with field supplies", "Field supplies"),
+        gallery_image("images/im-15.jpeg", "Program staff arranging community health supplies", "Field materials"),
+        gallery_image("images/im-17.jpeg", "Community session with mothers and health volunteers", "Motherhood circle"),
+    ],
+    "focus_area": [
+        gallery_image("images/im-04.jpeg", "Volunteer supporting a household health activity", "Household support"),
+        gallery_image("images/im-05.jpeg", "Team member demonstrating handwashing and water safety materials", "Practical demos"),
+        gallery_image("images/im-09.jpeg", "Community members attending a Health Planet Foundation outreach session", "Outreach day"),
+        gallery_image("images/im-15.jpeg", "Program staff arranging WASH and community health supplies", "Field materials"),
+    ],
+    "news": [
+        gallery_image("images/news/rana-bootcamp-2026.jpg", "Plenary session at the RANA Bootcamp in Nairobi", "RANA Bootcamp"),
+        gallery_image("images/news/rana-bootcamp-2026-group.jpg", "Participants at the RANA Bootcamp in Nairobi", "Regional partners"),
+        gallery_image("images/news/continental-conference-lusaka-2026.jpg", "Delegates at the continental conference plenary session in Lusaka", "Continental conference"),
+        gallery_image("images/news/continental-conference-lusaka-2026-panel.jpg", "Panel discussion at the continental conference in Lusaka", "Panel dialogue"),
+    ],
+    "careers": [
+        gallery_image("images/im-19.jpeg", "Young people and community leaders gathering outdoors", "Youth engagement"),
+        gallery_image("images/im-13.jpeg", "Health Planet Foundation team with field materials", "Prepared teams"),
+        gallery_image("images/im-11.jpeg", "Team member holding program supplies for community outreach", "Program supplies"),
+    ],
+    "internships": [
+        gallery_image("images/im-16.jpeg", "Intern supporting a community health activity", "Learning through service"),
+        gallery_image("images/im-06.jpeg", "Children and adults gathered under a tree for community programming", "Local participation"),
+        gallery_image("images/im-19.jpeg", "Young people and community leaders gathering outdoors", "Youth engagement"),
+    ],
+    "donate": [
+        gallery_image("images/im-15.jpeg", "Program staff arranging community health supplies", "Field materials"),
+        gallery_image("images/im-14.jpeg", "Health Planet Foundation team with field supplies", "Field supplies"),
+        gallery_image("images/im-20.jpeg", "Health Planet Foundation volunteer supporting bedside care", "Care support"),
+    ],
+    "contact": [
+        gallery_image("images/im-18.jpeg", "Health Planet Foundation team speaking with community members", "Community meeting"),
+        gallery_image("images/im-10.jpeg", "Health Planet Foundation staff member speaking with a mother during a home visit", "Home visit"),
+        gallery_image("images/im-09.jpeg", "Community members attending a Health Planet Foundation outreach session", "Outreach day"),
+    ],
+}
+
+FOCUS_HERO_SLIDES = {
+    "epidemic-preparedness": [
+        gallery_image("images/im-04.jpeg", "Volunteer supporting a household health activity", "Household support"),
+        gallery_image("images/im-08.jpeg", "Field preparation work at a community site", "Site preparation"),
+        gallery_image("images/im-18.jpeg", "Health Planet Foundation team speaking with community members", "Community meeting"),
+    ],
+    "advocacy-and-health-promotions": [
+        gallery_image("images/im-09.jpeg", "Community members attending a Health Planet Foundation outreach session", "Outreach day"),
+        gallery_image("images/im-03.jpeg", "Health Planet Foundation volunteers speaking with community members", "Field outreach"),
+        gallery_image("images/im-19.jpeg", "Young people and community leaders gathering outdoors", "Youth engagement"),
+    ],
+    "wash": [
+        gallery_image("images/im-15.jpeg", "Program staff arranging WASH and community health supplies", "Field materials"),
+        gallery_image("images/im-05.jpeg", "Team member demonstrating handwashing and water safety materials", "Practical demos"),
+        gallery_image("images/im-07.jpeg", "Community members receiving support during an outdoor session", "Trusted presence"),
+    ],
+}
+
 SECTION_LIST = [
     section("home", "home_hero_primary", button_label="Explore programs", button_url_name="projects"),
     section("home", "home_hero_secondary", button_label="Support the work", button_url_name="donate"),

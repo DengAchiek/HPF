@@ -59,15 +59,77 @@ def get_sections(page_slug):
     return default_sections
 
 
+def build_hero_slides(primary_image="", primary_alt="", slides=None):
+    hero_slides = []
+    seen_urls = set()
+
+    def add_slide(image_url, image_alt="", caption=""):
+        if not image_url or image_url in seen_urls:
+            return
+        seen_urls.add(image_url)
+        hero_slides.append(
+            defaults.item(
+                image_url=image_url,
+                image_alt=image_alt,
+                caption=caption,
+            )
+        )
+
+    add_slide(primary_image, primary_alt)
+    for slide in slides or []:
+        add_slide(
+            getattr(slide, "image_url", ""),
+            getattr(slide, "image_alt", ""),
+            getattr(slide, "caption", ""),
+        )
+
+    if not hero_slides:
+        add_slide(defaults.image_url("images/im-01.jpeg"), "Health Planet Foundation field work")
+
+    while len(hero_slides) < 6:
+        hero_slides.extend(hero_slides[: 6 - len(hero_slides)])
+
+    return hero_slides[:6]
+
+
+def get_hero_slides(gallery_key, primary_image="", primary_alt="", fallback_slides=None):
+    admin_slides = safe_list(
+        GalleryImage.objects.filter(
+            gallery_key=gallery_key,
+            is_active=True,
+        ).order_by("sort_order", "id")
+    )
+    slides = admin_slides or fallback_slides or []
+    return build_hero_slides(primary_image, primary_alt, slides)
+
+
+def get_page_hero_slides(page_slug, page, fallback_slides=None):
+    return get_hero_slides(
+        f"{page_slug}_hero",
+        getattr(page, "image_url", ""),
+        getattr(page, "image_alt", ""),
+        fallback_slides or defaults.HERO_SLIDES.get(page_slug, []),
+    )
+
+
 def base_page_context(slug):
+    page = get_page(slug)
     return {
-        "page": get_page(slug),
+        "page": page,
         "sections": get_sections(slug),
+        "hero_slides": get_page_hero_slides(slug, page),
     }
 
 
 def home(request):
     context = base_page_context("home")
+    gallery_images = list_or_default(
+        GalleryImage.objects.filter(
+            gallery_key="home_gallery",
+            is_active=True,
+        ).order_by("sort_order", "id"),
+        defaults.GALLERY_IMAGES,
+    )
     context.update(
         {
             "features": list_or_default(
@@ -96,13 +158,7 @@ def home(request):
                 NewsItem.objects.filter(is_active=True).order_by("sort_order", "id")[:2],
                 defaults.NEWS_ITEMS[:2],
             ),
-            "gallery_images": list_or_default(
-                GalleryImage.objects.filter(
-                    gallery_key="home_gallery",
-                    is_active=True,
-                ).order_by("sort_order", "id"),
-                defaults.GALLERY_IMAGES,
-            ),
+            "gallery_images": gallery_images,
             "partners": list_or_default(
                 GalleryImage.objects.filter(
                     gallery_key="home_partners",
@@ -117,15 +173,16 @@ def home(request):
 
 def about(request):
     context = base_page_context("about")
+    about_slides = list_or_default(
+        GalleryImage.objects.filter(
+            gallery_key="about_slideshow",
+            is_active=True,
+        ).order_by("sort_order", "id"),
+        defaults.ABOUT_SLIDES,
+    )
     context.update(
         {
-            "about_slides": list_or_default(
-                GalleryImage.objects.filter(
-                    gallery_key="about_slideshow",
-                    is_active=True,
-                ).order_by("sort_order", "id"),
-                defaults.ABOUT_SLIDES,
-            ),
+            "about_slides": about_slides,
             "work_features": list_or_default(
                 FeatureCard.objects.filter(
                     section_key="about_work",
@@ -149,15 +206,18 @@ def about(request):
             ),
         }
     )
+    context["hero_slides"] = get_page_hero_slides("about", context["page"], about_slides)
     return render(request, "about.html", context)
 
 
 def projects(request):
     context = base_page_context("projects")
-    context["projects"] = list_or_default(
+    projects = list_or_default(
         Project.objects.filter(is_active=True).order_by("sort_order", "id"),
         defaults.PROJECTS,
     )
+    context["projects"] = projects
+    context["hero_slides"] = get_page_hero_slides("projects", context["page"], projects)
     return render(request, "projects.html", context)
 
 
@@ -171,15 +231,23 @@ def focus_area(request, slug):
 
     context = base_page_context("focus_area")
     context["area"] = area
+    context["hero_slides"] = get_hero_slides(
+        f"focus_{slug}_hero",
+        getattr(area, "image_url", ""),
+        getattr(area, "image_alt", ""),
+        defaults.FOCUS_HERO_SLIDES.get(slug, defaults.HERO_SLIDES.get("focus_area", [])),
+    )
     return render(request, "focus_area.html", context)
 
 
 def news(request):
     context = base_page_context("news")
-    context["news_items"] = list_or_default(
+    news_items = list_or_default(
         NewsItem.objects.filter(is_active=True).order_by("sort_order", "id"),
         defaults.NEWS_ITEMS,
     )
+    context["news_items"] = news_items
+    context["hero_slides"] = get_page_hero_slides("news", context["page"], news_items)
     return render(request, "news.html", context)
 
 
@@ -224,6 +292,11 @@ def news_detail(request, slug):
             "article_body": article_body,
             "gallery_images": gallery_images,
             "related_news": related_news,
+            "hero_slides": build_hero_slides(
+                getattr(item, "image_url", ""),
+                getattr(item, "image_alt", ""),
+                gallery_images,
+            ),
         }
     )
     return render(request, "news_detail.html", context)
@@ -231,24 +304,38 @@ def news_detail(request, slug):
 
 def careers(request):
     context = base_page_context("careers")
+    hero_sources = [
+        context["sections"].get("careers_intro"),
+        *defaults.HERO_SLIDES.get("careers", []),
+    ]
     context["openings"] = list_or_default(
         CareerOpening.objects.filter(is_active=True),
         defaults.CAREER_OPENINGS,
     )
+    context["hero_slides"] = get_page_hero_slides("careers", context["page"], hero_sources)
     return render(request, "careers.html", context)
 
 
 def internships(request):
     context = base_page_context("internships")
+    hero_sources = [
+        context["sections"].get("internships_intro"),
+        *defaults.HERO_SLIDES.get("internships", []),
+    ]
     context["internships"] = list_or_default(
         InternshipTrack.objects.filter(is_active=True),
         defaults.INTERNSHIPS,
     )
+    context["hero_slides"] = get_page_hero_slides("internships", context["page"], hero_sources)
     return render(request, "internships.html", context)
 
 
 def donate(request):
     context = base_page_context("donate")
+    hero_sources = [
+        context["sections"].get("donate_details"),
+        *defaults.HERO_SLIDES.get("donate", []),
+    ]
     context.update(
         {
             "amounts": list_or_default(
@@ -258,10 +345,19 @@ def donate(request):
             "submitted": request.method == "POST",
         }
     )
+    context["hero_slides"] = get_page_hero_slides("donate", context["page"], hero_sources)
     return render(request, "donate.html", context)
 
 
 def contact(request):
     context = base_page_context("contact")
     context["submitted"] = request.method == "POST"
+    context["hero_slides"] = get_page_hero_slides(
+        "contact",
+        context["page"],
+        [
+            context["sections"].get("contact_details"),
+            *defaults.HERO_SLIDES.get("contact", []),
+        ],
+    )
     return render(request, "contact.html", context)

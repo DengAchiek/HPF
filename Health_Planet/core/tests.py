@@ -25,6 +25,11 @@ from .models import (
 
 
 class PublicContentFallbackTests(TestCase):
+    def hero_markup(self, response, section_class):
+        html = response.content.decode()
+        hero_start = html.split(f'<section class="{section_class}', 1)[1]
+        return hero_start.split("</section>", 1)[0]
+
     def setUp(self):
         for model in (
             SiteSettings,
@@ -68,6 +73,42 @@ class PublicContentFallbackTests(TestCase):
         self.assertNotContains(response, "The Tribe Hotel, Nairobi, Kenya")
         self.assertNotContains(response, "Intercontinental Hotel, Lusaka, Zambia")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
+
+    def test_hero_carousels_use_page_specific_images(self):
+        home_response = self.client.get("/")
+        home_hero = self.hero_markup(home_response, "home-hero")
+
+        self.assertIn("images/im-02.jpeg", home_hero)
+        self.assertIn("images/im-12.jpeg", home_hero)
+        self.assertNotIn("images/news/rana-bootcamp-2026.jpg", home_hero)
+        self.assertNotIn("images/im-18.jpeg", home_hero)
+
+        news_response = self.client.get("/news/")
+        news_hero = self.hero_markup(news_response, "page-hero hero-news")
+
+        self.assertIn("images/news/rana-bootcamp-2026.jpg", news_hero)
+        self.assertIn("images/news/continental-conference-lusaka-2026.jpg", news_hero)
+        self.assertNotIn("images/im-02.jpeg", news_hero)
+
+    def test_admin_hero_gallery_is_scoped_to_its_page(self):
+        GalleryImage.objects.create(
+            gallery_key="about_hero",
+            static_image="images/im-08.jpeg",
+            image_alt="About hero custom field image",
+            is_active=True,
+        )
+        GalleryImage.objects.create(
+            gallery_key="home_hero",
+            static_image="images/im-02.jpeg",
+            image_alt="Home hero custom field image",
+            is_active=True,
+        )
+
+        response = self.client.get("/about/")
+        about_hero = self.hero_markup(response, "page-hero hero-about")
+
+        self.assertIn("images/im-08.jpeg", about_hero)
+        self.assertNotIn("images/im-02.jpeg", about_hero)
 
     def test_focus_area_uses_default_content_when_admin_content_is_empty(self):
         response = self.client.get("/focus-areas/wash/")

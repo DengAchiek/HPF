@@ -155,6 +155,22 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_display = ("caption", "gallery_key", "focus_class", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
     list_filter = ("gallery_key", "is_active")
+    search_fields = ("caption", "image_alt", "static_image", "gallery_key")
+    fieldsets = (
+        (
+            "Placement",
+            {
+                "fields": ("gallery_key",),
+                "description": (
+                    "Use page-specific hero keys such as home_hero, about_hero, "
+                    "projects_hero, news_hero, careers_hero, internships_hero, "
+                    "donate_hero, contact_hero, or focus_wash_hero."
+                ),
+            },
+        ),
+        ("Image", {"fields": ("image", "static_image", "image_alt", "caption")}),
+        ("Display", {"fields": ("focus_class", "sort_order", "is_active")}),
+    )
 
 
 @admin.register(PartnerLogo)
