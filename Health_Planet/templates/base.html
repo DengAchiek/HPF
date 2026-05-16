@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260516-photo-loop">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260516-marquee-loop">
 </head>
 <body class="route-{{ request.resolver_match.url_name|default:'page' }}">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -194,6 +194,64 @@
                     showSlide(activeIndex + 1);
                 }, 6000);
             }
+        });
+
+        document.querySelectorAll('[data-marquee="photo"]').forEach(function (carousel) {
+            const track = carousel.querySelector(".photo-track");
+            const firstSequence = carousel.querySelector(".photo-sequence");
+            const speed = 58;
+            let sequenceWidth = 0;
+            let offset = 0;
+            let previousTime = 0;
+            let paused = false;
+
+            if (!track || !firstSequence) {
+                return;
+            }
+
+            carousel.classList.add("is-scripted");
+
+            function measure() {
+                sequenceWidth = firstSequence.getBoundingClientRect().width;
+                if (sequenceWidth && offset >= sequenceWidth) {
+                    offset = offset % sequenceWidth;
+                }
+            }
+
+            function step(timestamp) {
+                if (!sequenceWidth) {
+                    measure();
+                }
+
+                if (!previousTime) {
+                    previousTime = timestamp;
+                }
+
+                const elapsed = timestamp - previousTime;
+                previousTime = timestamp;
+
+                if (!paused && sequenceWidth) {
+                    offset += (elapsed / 1000) * speed;
+                    if (offset >= sequenceWidth) {
+                        offset = offset % sequenceWidth;
+                    }
+                    track.style.transform = "translate3d(" + (-offset) + "px, 0, 0)";
+                }
+
+                window.requestAnimationFrame(step);
+            }
+
+            carousel.addEventListener("mouseenter", function () {
+                paused = true;
+            });
+
+            carousel.addEventListener("mouseleave", function () {
+                paused = false;
+            });
+
+            window.addEventListener("resize", measure);
+            measure();
+            window.requestAnimationFrame(step);
         });
     })();
 </script>

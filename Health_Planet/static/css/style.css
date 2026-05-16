@@ -861,6 +861,10 @@ textarea {
     animation-play-state: paused;
 }
 
+.photo-carousel.is-scripted .photo-track {
+    animation: none;
+}
+
 .photo-sequence {
     display: flex;
     flex: 0 0 auto;

@@ -74,6 +74,8 @@ class PublicContentFallbackTests(TestCase):
         self.assertNotContains(response, "Intercontinental Hotel, Lusaka, Zambia")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
         self.assertContains(response, 'class="photo-sequence"', count=4)
+        self.assertContains(response, 'data-marquee="photo"')
+        self.assertContains(response, "20260516-marquee-loop")
 
     def test_hero_carousels_use_page_specific_images(self):
         home_response = self.client.get("/")
