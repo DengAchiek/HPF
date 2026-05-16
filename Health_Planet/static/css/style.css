@@ -852,7 +852,8 @@ textarea {
 .photo-track {
     display: flex;
     width: max-content;
-    animation: photo-carousel-scroll 138s linear infinite;
+    transform: translate3d(0, 0, 0);
+    animation: photo-carousel-scroll 112s linear infinite;
     will-change: transform;
 }
 
@@ -1297,11 +1298,11 @@ textarea {
 
 @keyframes photo-carousel-scroll {
     from {
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
 
     to {
-        transform: translateX(-33.333333%);
+        transform: translate3d(-25%, 0, 0);
     }
 }
 

@@ -73,6 +73,7 @@ class PublicContentFallbackTests(TestCase):
         self.assertNotContains(response, "The Tribe Hotel, Nairobi, Kenya")
         self.assertNotContains(response, "Intercontinental Hotel, Lusaka, Zambia")
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
+        self.assertContains(response, 'class="photo-sequence"', count=4)
 
     def test_hero_carousels_use_page_specific_images(self):
         home_response = self.client.get("/")
