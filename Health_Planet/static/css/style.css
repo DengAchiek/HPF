@@ -1397,12 +1397,31 @@ textarea {
     pointer-events: none;
 }
 
-.partner-grid {
+.partner-carousel {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
+    width: 100%;
+    padding: 8px 0 22px;
+}
+
+.partner-track {
+    display: flex;
+    width: max-content;
+    animation: partner-logo-scroll 58s linear infinite;
+    will-change: transform;
+}
+
+.partner-carousel:hover .partner-track {
+    animation-play-state: paused;
+}
+
+.partner-sequence {
+    display: flex;
+    flex: 0 0 auto;
     gap: 22px;
+    min-width: max-content;
+    padding-right: 22px;
 }
 
 .partner-card {
@@ -1410,6 +1429,7 @@ textarea {
     align-items: center;
     justify-items: center;
     gap: 16px;
+    flex: 0 0 clamp(240px, 27vw, 360px);
     min-height: 170px;
     padding: 28px;
     border: 1px solid rgba(36, 79, 43, 0.11);
@@ -1441,6 +1461,16 @@ textarea {
     font-weight: 800;
     line-height: 1.35;
     text-align: center;
+}
+
+@keyframes partner-logo-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-33.333333%);
+    }
 }
 
 .contact-cta {
@@ -2132,7 +2162,6 @@ textarea:focus {
     .news-grid,
     .news-board,
     .home-update-grid,
-    .partner-grid,
     .staff-grid,
     .board-grid,
     .counter-grid,
@@ -2163,6 +2192,10 @@ textarea:focus {
     .home-update-card,
     .home-update-content {
         min-height: 320px;
+    }
+
+    .partner-card {
+        flex-basis: clamp(230px, 42vw, 320px);
     }
 
     .article-layout {
@@ -2535,6 +2568,17 @@ textarea:focus {
         height: 310px;
     }
 
+    .partner-carousel {
+        width: calc(100% + 24px);
+        margin-left: -12px;
+    }
+
+    .partner-card {
+        flex-basis: 74vw;
+        min-height: 154px;
+        padding: 22px;
+    }
+
     .about-slide figcaption {
         left: 14px;
         bottom: 18px;
@@ -2575,6 +2619,14 @@ textarea:focus {
     }
 
     .photo-track {
+        animation: none;
+    }
+
+    .partner-carousel {
+        overflow-x: auto;
+    }
+
+    .partner-track {
         animation: none;
     }
 

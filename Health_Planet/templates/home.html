@@ -160,13 +160,33 @@
             <p>{{ sections.home_partners.body }}</p>
         </div>
 
-        <div class="partner-grid" aria-label="Health Planet Foundation partners">
-            {% for partner in partners %}
-            <article class="partner-card {{ partner.focus_class }}">
-                <img src="{{ partner.image_url }}" alt="{{ partner.image_alt|default:partner.caption }}" loading="lazy">
-                <span>{{ partner.caption }}</span>
-            </article>
-            {% endfor %}
+        <div class="partner-carousel" aria-label="Health Planet Foundation partners">
+            <div class="partner-track">
+                <div class="partner-sequence">
+                    {% for partner in partners %}
+                    <article class="partner-card {{ partner.focus_class }}">
+                        <img src="{{ partner.image_url }}" alt="{{ partner.image_alt|default:partner.caption }}" loading="eager" decoding="async">
+                        <span>{{ partner.caption }}</span>
+                    </article>
+                    {% endfor %}
+                </div>
+                <div class="partner-sequence" aria-hidden="true">
+                    {% for partner in partners %}
+                    <article class="partner-card {{ partner.focus_class }}">
+                        <img src="{{ partner.image_url }}" alt="" loading="eager" decoding="async">
+                        <span>{{ partner.caption }}</span>
+                    </article>
+                    {% endfor %}
+                </div>
+                <div class="partner-sequence" aria-hidden="true">
+                    {% for partner in partners %}
+                    <article class="partner-card {{ partner.focus_class }}">
+                        <img src="{{ partner.image_url }}" alt="" loading="eager" decoding="async">
+                        <span>{{ partner.caption }}</span>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </section>
