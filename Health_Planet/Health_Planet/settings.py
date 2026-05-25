@@ -172,3 +172,27 @@ STORAGES = {
         "BACKEND": STATICFILES_STORAGE_BACKEND,
     },
 }
+
+
+# Website form notifications. Submissions are always stored in the admin inbox;
+# set recipient addresses and SMTP variables to also receive email alerts.
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "website@localhost")
+CONTACT_NOTIFICATION_EMAIL = os.environ.get("CONTACT_NOTIFICATION_EMAIL", "")
+DONATION_NOTIFICATION_EMAIL = os.environ.get(
+    "DONATION_NOTIFICATION_EMAIL",
+    CONTACT_NOTIFICATION_EMAIL,
+)
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "25"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "False").lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}

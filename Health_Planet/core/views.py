@@ -1,6 +1,12 @@
-from django.http import Http404
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import send_mail
 from django.db.utils import OperationalError, ProgrammingError
-from django.shortcuts import render
+from django.http import Http404
+from django.shortcuts import redirect, render
+
+from contacts.forms import ContactSubmissionForm
+from donations.forms import DonationInterestForm
 
 from . import defaults
 from .models import (
@@ -109,6 +115,18 @@ def get_page_hero_slides(page_slug, page, fallback_slides=None):
         getattr(page, "image_url", ""),
         getattr(page, "image_alt", ""),
         fallback_slides or defaults.HERO_SLIDES.get(page_slug, []),
+    )
+
+
+def notify_team(subject, body, recipient):
+    if not recipient:
+        return
+    send_mail(
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        [recipient],
+        fail_silently=True,
     )
 
 
@@ -336,13 +354,42 @@ def donate(request):
         context["sections"].get("donate_details"),
         *defaults.HERO_SLIDES.get("donate", []),
     ]
+    amounts = list_or_default(
+        DonationAmount.objects.filter(is_active=True),
+        defaults.DONATION_AMOUNTS,
+    )
+    form = DonationInterestForm(request.POST or None, amounts=amounts)
+
+    if request.method == "POST" and request.POST.get("website"):
+        messages.success(
+            request,
+            "Thank you. Your support interest has been received and our team will follow up.",
+        )
+        return redirect("donate")
+
+    if request.method == "POST" and form.is_valid():
+        submission = form.save()
+        notify_team(
+            "New donation interest submitted through the website",
+            (
+                f"Name: {submission.full_name}\n"
+                f"Email: {submission.email}\n"
+                f"Phone: {submission.phone or 'Not provided'}\n"
+                f"Preferred amount: {submission.display_amount}\n\n"
+                f"Note:\n{submission.message or 'No note provided.'}"
+            ),
+            settings.DONATION_NOTIFICATION_EMAIL,
+        )
+        messages.success(
+            request,
+            "Thank you. Your support interest has been received and our team will follow up.",
+        )
+        return redirect("donate")
+
     context.update(
         {
-            "amounts": list_or_default(
-                DonationAmount.objects.filter(is_active=True),
-                defaults.DONATION_AMOUNTS,
-            ),
-            "submitted": request.method == "POST",
+            "amounts": amounts,
+            "form": form,
         }
     )
     context["hero_slides"] = get_page_hero_slides("donate", context["page"], hero_sources)
@@ -351,7 +398,29 @@ def donate(request):
 
 def contact(request):
     context = base_page_context("contact")
-    context["submitted"] = request.method == "POST"
+    form = ContactSubmissionForm(request.POST or None)
+
+    if request.method == "POST" and request.POST.get("website"):
+        messages.success(request, "Thank you. Your message has been received.")
+        return redirect("contact")
+
+    if request.method == "POST" and form.is_valid():
+        submission = form.save()
+        notify_team(
+            "New website contact enquiry",
+            (
+                f"Name: {submission.full_name}\n"
+                f"Email: {submission.email}\n"
+                f"Phone: {submission.phone or 'Not provided'}\n"
+                f"Organization: {submission.organization or 'Not provided'}\n\n"
+                f"Message:\n{submission.message}"
+            ),
+            settings.CONTACT_NOTIFICATION_EMAIL,
+        )
+        messages.success(request, "Thank you. Your message has been received.")
+        return redirect("contact")
+
+    context["form"] = form
     context["hero_slides"] = get_page_hero_slides(
         "contact",
         context["page"],
@@ -361,3 +430,7 @@ def contact(request):
         ],
     )
     return render(request, "contact.html", context)
+
+
+def privacy(request):
+    return render(request, "privacy.html", base_page_context("privacy"))

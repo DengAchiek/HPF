@@ -34,6 +34,7 @@ urlpatterns = [
     path("internships/", views.internships, name="internships"),
     path("donate/", views.donate, name="donate"),
     path("contact/", views.contact, name="contact"),
+    path("privacy/", views.privacy, name="privacy"),
     path("admin/", admin.site.urls),
 ]
 

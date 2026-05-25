@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.meta_title|default:"Privacy Notice | Health Planet Foundation" }}{% endblock %}
+
+{% block content %}
+<section class="page-hero {{ page.hero_class|default:'hero-contact' }}"{% if page.image_url %} style="--page-hero-bg: url('{{ page.image_url }}');"{% endif %}>
+    {% include "partials/hero_backgrounds.html" with primary_image=page.image_url %}
+    <div class="container page-hero-inner">
+        <p class="hero-kicker">{{ page.hero_kicker }}</p>
+        <h1>{{ page.hero_title }}</h1>
+        <p>{{ page.hero_text }}</p>
+    </div>
+</section>
+
+<section class="section privacy-section">
+    <div class="container privacy-layout">
+        <div class="section-title privacy-title">
+            <p class="eyebrow">{{ sections.privacy_intro.kicker }}</p>
+            <h2>{{ sections.privacy_intro.title }}</h2>
+            <p>{{ sections.privacy_intro.body }}</p>
+        </div>
+
+        <div class="privacy-grid">
+            <article class="rich-panel">
+                <h3>{{ sections.privacy_information.title }}</h3>
+                {{ sections.privacy_information.body|linebreaks }}
+            </article>
+            <article class="rich-panel">
+                <h3>{{ sections.privacy_use.title }}</h3>
+                {{ sections.privacy_use.body|linebreaks }}
+            </article>
+            <article class="rich-panel">
+                <h3>{{ sections.privacy_choices.title }}</h3>
+                {{ sections.privacy_choices.body|linebreaks }}
+                <a class="text-link" href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

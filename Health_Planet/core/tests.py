@@ -75,7 +75,7 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
         self.assertContains(response, 'class="photo-sequence"', count=4)
         self.assertContains(response, 'data-marquee="photo"')
-        self.assertContains(response, "20260516-marquee-loop")
+        self.assertContains(response, "20260525-forms-5")
 
     def test_hero_carousels_use_page_specific_images(self):
         home_response = self.client.get("/")
@@ -118,6 +118,16 @@ class PublicContentFallbackTests(TestCase):
 
         self.assertContains(response, "WASH")
         self.assertContains(response, "Water safety demonstrations")
+
+    def test_privacy_notice_is_available_from_public_footer(self):
+        response = self.client.get("/privacy/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "How we handle your information")
+        self.assertContains(response, "does not collect card")
+
+        home_response = self.client.get("/")
+        self.assertContains(home_response, 'href="/privacy/"')
 
     def test_about_team_uses_staff_directory_defaults(self):
         response = self.client.get("/about/")

@@ -13,6 +13,7 @@ ROUTES = {
     "internships": "/internships/",
     "donate": "/donate/",
     "contact": "/contact/",
+    "privacy": "/privacy/",
 }
 
 
@@ -253,6 +254,16 @@ PAGES = {
         "Tell us what you are working on and where collaboration could help.",
         "images/im-18.jpeg",
     ),
+    "privacy": page(
+        "privacy",
+        "Privacy Notice",
+        "Privacy Notice | Health Planet Foundation",
+        "hero-contact",
+        "Privacy notice",
+        "Your information deserves careful handling.",
+        "This notice explains what we collect through the website and how to contact us about your information.",
+        "images/im-18.jpeg",
+    ),
 }
 
 HERO_SLIDES = {
@@ -307,6 +318,10 @@ HERO_SLIDES = {
         gallery_image("images/im-18.jpeg", "Health Planet Foundation team speaking with community members", "Community meeting"),
         gallery_image("images/im-10.jpeg", "Health Planet Foundation staff member speaking with a mother during a home visit", "Home visit"),
         gallery_image("images/im-09.jpeg", "Community members attending a Health Planet Foundation outreach session", "Outreach day"),
+    ],
+    "privacy": [
+        gallery_image("images/im-18.jpeg", "Health Planet Foundation team speaking with community members", "Community meeting"),
+        gallery_image("images/im-10.jpeg", "Health Planet Foundation staff member speaking with a mother during a home visit", "Home visit"),
     ],
 }
 
@@ -458,7 +473,7 @@ SECTION_LIST = [
         "donate_details",
         kicker="Support the mission",
         title="Choose an amount",
-        body="This demo form records your interest locally and can be connected to a payment provider when the organization is ready.",
+        body="Tell us how you would like to support the work. Our team will contact you with approved giving options. No online payment is collected on this form.",
         static_image="images/im-15.jpeg",
         image_alt="Program staff preparing community health materials",
     ),
@@ -475,6 +490,31 @@ SECTION_LIST = [
         "contact_note",
         title="Partnership focus",
         body="Community health, climate resilience, safe motherhood, mental wellness, and youth-centered public health programs.",
+    ),
+    section(
+        "privacy",
+        "privacy_intro",
+        kicker="Last updated: 25 May 2026",
+        title="How we handle your information",
+        body="Health Planet Foundation collects only the details needed to respond to enquiries and expressions of interest in supporting our work.",
+    ),
+    section(
+        "privacy",
+        "privacy_information",
+        title="Information we collect",
+        body="When you use the contact form, we collect your name, email address, optional phone and organization details, and your message.\n\nWhen you submit donation interest, we collect your contact details, preferred contribution amount, and any note you provide. This form does not collect card, mobile money, or bank payment details.",
+    ),
+    section(
+        "privacy",
+        "privacy_use",
+        title="How we use it",
+        body="We use submissions to answer enquiries, discuss partnerships, and follow up about voluntary support. Authorized staff may review submissions in the website administration system and may receive an email alert when notifications are configured.\n\nPlease do not provide sensitive medical or health information through public website forms.",
+    ),
+    section(
+        "privacy",
+        "privacy_choices",
+        title="Your choices",
+        body="You may ask us to correct or delete details submitted through this website, subject to applicable record-keeping needs. Contact us using the email address below with your request.\n\nSpam detection fields help protect the website from automated submissions and are not used for marketing.",
     ),
     section(
         "focus_area",
