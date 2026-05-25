@@ -123,9 +123,11 @@ class PublicContentFallbackTests(TestCase):
         response = self.client.get("/about/")
 
         self.assertContains(response, "Liyoka Liyoka")
-        self.assertContains(response, "Tawanda Nyandoro")
+        self.assertContains(response, "Sibeso")
+        self.assertContains(response, "Opputune Time Business Consultants")
         self.assertContains(response, "images/staff/liyoka-liyoka.jpg")
-        self.assertContains(response, "images/staff/tawanda-nyandoro.jpg")
+        self.assertContains(response, "images/staff/sibeso.jpg")
+        self.assertNotContains(response, "Tawanda Nyandoro")
         self.assertNotContains(response, "Photo pending")
 
     def test_partner_logo_proxy_targets_home_partners(self):
