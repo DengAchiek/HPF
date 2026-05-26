@@ -101,11 +101,45 @@ def news_item(
     )
 
 
+def project_item(
+    slug,
+    title,
+    description,
+    status,
+    static_image,
+    image_alt,
+    location="Lusaka, Zambia",
+    period_label="Ongoing",
+    body="",
+    outcomes=None,
+    gallery_images=None,
+):
+    return item(
+        slug=slug,
+        title=title,
+        description=description,
+        status=status,
+        location=location,
+        period_label=period_label,
+        body=body or description,
+        impact_body=body or description,
+        outcomes=outcomes or [],
+        static_image=static_image,
+        image_alt=image_alt,
+        image_url=image_url(static_image),
+        detail_href=f"/projects/{slug}/",
+        gallery_images=gallery_images or [
+            gallery_image(static_image, image_alt, title, 10),
+        ],
+    )
+
+
 def page(slug, title, meta_title, hero_class, hero_kicker, hero_title, hero_text, static_image):
     return item(
         slug=slug,
         title=title,
         meta_title=meta_title,
+        meta_description=hero_text,
         hero_class=hero_class,
         hero_kicker=hero_kicker,
         hero_title=hero_title,
@@ -126,6 +160,7 @@ SITE_SETTINGS = item(
     email="healthyplanetfoundation@gmail.com",
     phone="+260971693902",
     copyright_text="\u00a9 2026 Health Planet Foundation. All rights reserved.",
+    analytics_measurement_id="",
     logo_url=image_url("images/HPF-logo.jpeg"),
 )
 
@@ -494,7 +529,7 @@ SECTION_LIST = [
     section(
         "privacy",
         "privacy_intro",
-        kicker="Last updated: 25 May 2026",
+        kicker="Last updated: 26 May 2026",
         title="How we handle your information",
         body="Health Planet Foundation collects only the details needed to respond to enquiries and expressions of interest in supporting our work.",
     ),
@@ -502,19 +537,19 @@ SECTION_LIST = [
         "privacy",
         "privacy_information",
         title="Information we collect",
-        body="When you use the contact form, we collect your name, email address, optional phone and organization details, and your message.\n\nWhen you submit donation interest, we collect your contact details, preferred contribution amount, and any note you provide. This form does not collect card, mobile money, or bank payment details.",
+        body="When you use the contact form, we collect your name, email address, optional phone and organization details, and your message.\n\nWhen you submit donation interest, we collect your contact details, preferred contribution amount, and any note you provide. This form does not collect card, mobile money, or bank payment details.\n\nWhen you apply for a role or internship, we collect your contact details, selected opportunity, motivation, and an optional CV or portfolio link that you choose to share.",
     ),
     section(
         "privacy",
         "privacy_use",
         title="How we use it",
-        body="We use submissions to answer enquiries, discuss partnerships, and follow up about voluntary support. Authorized staff may review submissions in the website administration system and may receive an email alert when notifications are configured.\n\nPlease do not provide sensitive medical or health information through public website forms.",
+        body="We use submissions to answer enquiries, discuss partnerships, follow up about voluntary support, and review applications. Authorized staff may review submissions in the website administration system and may receive an email alert when notifications are configured.\n\nOptional website analytics only loads after a visitor allows analytics in the on-screen preference prompt and an administrator has configured a measurement ID.\n\nPlease do not provide sensitive medical or health information through public website forms.",
     ),
     section(
         "privacy",
         "privacy_choices",
         title="Your choices",
-        body="You may ask us to correct or delete details submitted through this website, subject to applicable record-keeping needs. Contact us using the email address below with your request.\n\nSpam detection fields help protect the website from automated submissions and are not used for marketing.",
+        body="You may ask us to correct or delete details submitted through this website, subject to applicable record-keeping needs. Contact us using the email address below with your request.\n\nSpam detection fields help protect the website from automated submissions and are not used for marketing. Your analytics choice is stored in your browser and analytics is not loaded when you decline.",
     ),
     section(
         "focus_area",
@@ -582,9 +617,78 @@ STATS = [
 ]
 
 PROJECTS = [
-    item(title="Climate-Smart Clinics", description="Helping rural health posts prepare for heat, flooding, and service disruption through local planning and practical resilience tools.", status="Active", image_url=image_url("images/im-13.jpeg"), image_alt="Health Planet Foundation team members preparing field materials"),
-    item(title="Safe Motherhood Circles", description="Community-led sessions connecting expectant mothers with health information, referral support, and trusted peer networks.", status="Field program", image_url=image_url("images/im-17.jpeg"), image_alt="Community session with mothers and health volunteers"),
-    item(title="Youth Mental Wellness", description="School and community outreach that makes mental health conversations easier, earlier, and connected to local care pathways.", status="Growing", image_url=image_url("images/im-19.jpeg"), image_alt="Young people and community leaders gathering outdoors"),
+    project_item(
+        "climate-smart-clinics",
+        "Climate-Smart Clinics",
+        "Helping rural health posts prepare for heat, flooding, and service disruption through local planning and practical resilience tools.",
+        "Active",
+        "images/im-13.jpeg",
+        "Health Planet Foundation team members preparing field materials",
+        body=(
+            "Climate pressure can interrupt basic health services at the exact moment families "
+            "need them most. Climate-Smart Clinics works with community and facility teams to "
+            "identify local risks, protect essential services, and strengthen practical readiness.\n\n"
+            "Activities connect preparedness planning with community health information, water "
+            "safety, and referral continuity so local responses remain grounded in everyday needs."
+        ),
+        outcomes=[
+            "Community-led risk mapping and preparedness conversations",
+            "Practical planning for essential health service continuity",
+            "Stronger links between household readiness and referral pathways",
+        ],
+        gallery_images=[
+            gallery_image("images/im-13.jpeg", "Team members preparing field materials", "Preparedness planning", 10),
+            gallery_image("images/im-15.jpeg", "Program staff arranging community health supplies", "Readiness materials", 20),
+        ],
+    ),
+    project_item(
+        "safe-motherhood-circles",
+        "Safe Motherhood Circles",
+        "Community-led sessions connecting expectant mothers with health information, referral support, and trusted peer networks.",
+        "Field program",
+        "images/im-17.jpeg",
+        "Community session with mothers and health volunteers",
+        body=(
+            "Safe Motherhood Circles create welcoming spaces for families to receive trustworthy "
+            "maternal and reproductive health information close to home. Community sessions focus "
+            "on respectful listening, early referral, and reducing barriers to seeking care.\n\n"
+            "Working with local partners helps families recognise concerns early and connect with "
+            "appropriate services while preserving dignity and trust."
+        ),
+        outcomes=[
+            "Trusted maternal health conversations in community settings",
+            "Earlier referral awareness for mothers and families",
+            "Peer support that strengthens confidence in accessing care",
+        ],
+        gallery_images=[
+            gallery_image("images/im-17.jpeg", "Mothers and health volunteers in session", "Community circle", 10),
+            gallery_image("images/im-18.jpeg", "Community health conversation", "Trusted support", 20),
+        ],
+    ),
+    project_item(
+        "youth-mental-wellness",
+        "Youth Mental Wellness",
+        "School and community outreach that makes mental health conversations easier, earlier, and connected to local care pathways.",
+        "Growing",
+        "images/im-19.jpeg",
+        "Young people and community leaders gathering outdoors",
+        body=(
+            "Young people need safe, respectful opportunities to talk about emotional wellbeing and "
+            "understand where support can be found. Youth Mental Wellness supports age-appropriate "
+            "community conversations that reduce stigma and promote earlier help-seeking.\n\n"
+            "The program works through youth-friendly outreach, trusted facilitators, and referral "
+            "information that can connect awareness with real support."
+        ),
+        outcomes=[
+            "Youth-friendly mental wellness conversations",
+            "Reduced stigma through trusted community outreach",
+            "Clearer pathways for seeking additional support",
+        ],
+        gallery_images=[
+            gallery_image("images/im-19.jpeg", "Young people gathered outdoors", "Youth outreach", 10),
+            gallery_image("images/im-01.jpeg", "Community gathering for a session", "Wellness dialogue", 20),
+        ],
+    ),
 ]
 
 NEWS_ITEMS = [

@@ -77,6 +77,11 @@ class SiteSettings(models.Model):
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=40, blank=True)
     copyright_text = models.CharField(max_length=180, blank=True)
+    analytics_measurement_id = models.CharField(
+        max_length=32,
+        blank=True,
+        help_text="Optional Google Analytics 4 Measurement ID, for example G-XXXXXXXXXX.",
+    )
 
     class Meta:
         verbose_name = "Site settings"
@@ -149,6 +154,11 @@ class PageContent(ImageMixin):
     slug = models.SlugField(unique=True)
     title = models.CharField(max_length=160)
     meta_title = models.CharField(max_length=180, blank=True)
+    meta_description = models.CharField(
+        max_length=280,
+        blank=True,
+        help_text="Short search and sharing description. Leave blank to use the hero summary.",
+    )
     hero_class = models.CharField(max_length=80, blank=True)
     hero_kicker = models.CharField(max_length=120, blank=True)
     hero_title = models.CharField(max_length=220)
@@ -201,12 +211,60 @@ class StatItem(ActiveOrderedModel):
 
 
 class Project(ImageMixin, ActiveOrderedModel):
+    slug = models.SlugField(max_length=220, unique=True, blank=True, null=True)
     title = models.CharField(max_length=160)
     description = models.TextField()
     status = models.CharField(max_length=80, blank=True)
+    location = models.CharField(max_length=180, blank=True)
+    period_label = models.CharField(max_length=100, blank=True)
+    body = models.TextField(
+        blank=True,
+        help_text="Long-form impact story. Use blank lines to separate paragraphs.",
+    )
+    outcomes_text = models.TextField(
+        blank=True,
+        help_text="One measurable result or outcome per line.",
+    )
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)[:180] or "project"
+            slug = base_slug
+            counter = 2
+            while Project.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    @property
+    def detail_href(self):
+        if not self.slug:
+            return reverse("projects")
+        return reverse("project_detail", kwargs={"slug": self.slug})
+
+    @property
+    def impact_body(self):
+        return self.body or self.description
+
+    @property
+    def outcomes(self):
+        return [outcome.strip() for outcome in self.outcomes_text.splitlines() if outcome.strip()]
+
+
+class ProjectImage(ImageMixin, ActiveOrderedModel):
+    project = models.ForeignKey(
+        Project,
+        related_name="gallery_images",
+        on_delete=models.CASCADE,
+    )
+    caption = models.CharField(max_length=180, blank=True)
+
+    def __str__(self):
+        return self.caption or self.image_alt or self.static_image or f"Image for {self.project}"
 
 
 class NewsItem(ImageMixin, ActiveOrderedModel):

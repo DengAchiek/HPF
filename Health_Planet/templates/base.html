@@ -4,12 +4,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ site_settings.footer_about|default:'Health Planet Foundation advances community health, climate resilience, safe motherhood, and mental wellness.' }}">
+    <meta name="description" content="{{ seo_description|default:site_settings.footer_about|default:'Health Planet Foundation advances community health, climate resilience, safe motherhood, and mental wellness.' }}">
+    <meta name="robots" content="index, follow">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+    <meta property="og:site_name" content="{{ site_settings.organization_name|default:'Health Planet Foundation' }}">
+    <meta property="og:title" content="{{ seo_title|default:site_settings.organization_name|default:'Health Planet Foundation' }}">
+    <meta property="og:description" content="{{ seo_description|default:site_settings.footer_about|default:'Health Planet Foundation advances community health and climate resilience.' }}">
+    <meta property="og:type" content="website">
+    {% if canonical_url %}<meta property="og:url" content="{{ canonical_url }}">{% endif %}
+    {% if seo_image %}<meta property="og:image" content="{{ seo_image }}">{% endif %}
+    <meta name="twitter:card" content="{% if seo_image %}summary_large_image{% else %}summary{% endif %}">
+    <meta name="twitter:title" content="{{ seo_title|default:site_settings.organization_name|default:'Health Planet Foundation' }}">
+    <meta name="twitter:description" content="{{ seo_description|default:site_settings.footer_about|default:'Health Planet Foundation advances community health and climate resilience.' }}">
+    {% if seo_image %}<meta name="twitter:image" content="{{ seo_image }}">{% endif %}
     <title>{% block title %}{{ site_settings.organization_name|default:"Health Planet Foundation" }}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260525-forms-5">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260526-impact-applications-2">
 </head>
 <body class="route-{{ request.resolver_match.url_name|default:'page' }}">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -98,6 +110,67 @@
         <p>{{ site_settings.copyright_text|default:"© 2026 Health Planet Foundation. All rights reserved." }}</p>
     </div>
 </footer>
+{% if site_settings.analytics_measurement_id %}
+<div class="analytics-consent" data-analytics-consent role="dialog" aria-label="Analytics preferences" hidden>
+    <p><strong>Analytics preferences</strong> Allow anonymous visit measurement to help improve this website.</p>
+    <div class="analytics-actions">
+        <button class="button button-primary" type="button" data-analytics-allow>Allow analytics</button>
+        <button class="button button-dark" type="button" data-analytics-decline>No thanks</button>
+    </div>
+</div>
+<script>
+    (function () {
+        const measurementId = "{{ site_settings.analytics_measurement_id|escapejs }}";
+        const banner = document.querySelector("[data-analytics-consent]");
+        const allow = document.querySelector("[data-analytics-allow]");
+        const decline = document.querySelector("[data-analytics-decline]");
+        const preferenceKey = "hpf_analytics_consent";
+
+        function loadAnalytics() {
+            if (!measurementId || window.dataLayer) {
+                return;
+            }
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () { window.dataLayer.push(arguments); };
+            window.gtag("js", new Date());
+            window.gtag("config", measurementId, { anonymize_ip: true });
+
+            const script = document.createElement("script");
+            script.async = true;
+            script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(measurementId);
+            document.head.appendChild(script);
+        }
+
+        let preference = "";
+        try {
+            preference = window.localStorage.getItem(preferenceKey) || "";
+        } catch (error) {
+            preference = "";
+        }
+
+        if (preference === "allowed") {
+            loadAnalytics();
+        } else if (!preference && banner) {
+            banner.hidden = false;
+        }
+
+        if (allow) {
+            allow.addEventListener("click", function () {
+                try { window.localStorage.setItem(preferenceKey, "allowed"); } catch (error) {}
+                banner.hidden = true;
+                loadAnalytics();
+            });
+        }
+
+        if (decline) {
+            decline.addEventListener("click", function () {
+                try { window.localStorage.setItem(preferenceKey, "declined"); } catch (error) {}
+                banner.hidden = true;
+            });
+        }
+    })();
+</script>
+{% endif %}
 <script>
     (function () {
         const navShell = document.querySelector(".nav-shell");

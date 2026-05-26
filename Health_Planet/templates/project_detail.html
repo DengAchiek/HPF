@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Impact | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<article class="impact-article">
+    <section class="article-hero"{% if project.image_url %} style="--article-hero-bg: url('{{ project.image_url }}');"{% endif %}>
+        {% include "partials/hero_backgrounds.html" with primary_image=project.image_url %}
+        <div class="container article-hero-inner">
+            <a class="article-back-link" href="{% url 'projects' %}">Projects</a>
+            <div class="news-meta article-meta" aria-label="Project details">
+                {% if project.status %}<span>{{ project.status }}</span>{% endif %}
+                {% if project.location %}<span>{{ project.location }}</span>{% endif %}
+                {% if project.period_label %}<span>{{ project.period_label }}</span>{% endif %}
+            </div>
+            <h1>{{ project.title }}</h1>
+            <p>{{ project.description }}</p>
+        </div>
+    </section>
+
+    <section class="section article-section">
+        <div class="container article-layout">
+            <div class="article-main">
+                {% if gallery_images %}
+                <div class="article-gallery" aria-label="Project impact gallery">
+                    {% for image in gallery_images %}
+                    <figure class="article-gallery-item{% if forloop.first %} article-gallery-lead{% endif %}">
+                        <img src="{{ image.image_url }}" alt="{{ image.image_alt }}" loading="lazy">
+                        {% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}
+                    </figure>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if project.outcomes %}
+                <section class="impact-results" aria-labelledby="impact-results-title">
+                    <p class="eyebrow">Impact in focus</p>
+                    <h2 id="impact-results-title">What this work strengthens</h2>
+                    <ul>
+                        {% for outcome in project.outcomes %}
+                        <li>{{ outcome }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endif %}
+
+                <div class="article-copy">
+                    {{ project.impact_body|linebreaks }}
+                </div>
+            </div>
+
+            <aside class="article-sidebar" aria-label="More projects">
+                <div class="article-sidebar-card">
+                    <p class="eyebrow">Our work</p>
+                    <h2>More projects</h2>
+                    {% for related in related_projects %}
+                    <a class="related-news-link" href="{{ related.detail_href }}">
+                        <span>{{ related.status }}</span>
+                        <strong>{{ related.title }}</strong>
+                    </a>
+                    {% endfor %}
+                    <a class="button button-primary impact-contact-button" href="{% url 'contact' %}">Discuss partnership</a>
+                </div>
+            </aside>
+        </div>
+    </section>
+</article>
+{% endblock %}

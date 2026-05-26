@@ -40,7 +40,7 @@
                 <span class="feature-icon">{{ internship.icon }}</span>
                 <h3>{{ internship.role }}</h3>
                 <p>{{ internship.focus }}</p>
-                <a class="text-link" href="mailto:healthyplanetfoundation@gmail.com">Send interest</a>
+                <a class="text-link" href="{% url 'internship_apply' %}?opportunity={{ internship.role|urlencode }}">Apply now</a>
             </article>
             {% endfor %}
         </div>

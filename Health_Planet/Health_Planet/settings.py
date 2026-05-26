@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     
     "core",
     "projects",
@@ -180,6 +181,10 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "website@localhost")
 CONTACT_NOTIFICATION_EMAIL = os.environ.get("CONTACT_NOTIFICATION_EMAIL", "")
 DONATION_NOTIFICATION_EMAIL = os.environ.get(
     "DONATION_NOTIFICATION_EMAIL",
+    CONTACT_NOTIFICATION_EMAIL,
+)
+APPLICATION_NOTIFICATION_EMAIL = os.environ.get(
+    "APPLICATION_NOTIFICATION_EMAIL",
     CONTACT_NOTIFICATION_EMAIL,
 )
 EMAIL_BACKEND = os.environ.get(

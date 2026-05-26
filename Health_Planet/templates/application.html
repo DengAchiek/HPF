@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ application_title }} | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<section class="page-hero {{ page.hero_class }}"{% if page.image_url %} style="--page-hero-bg: url('{{ page.image_url }}');"{% endif %}>
+    {% include "partials/hero_backgrounds.html" with primary_image=page.image_url %}
+    <div class="container page-hero-inner">
+        <p class="hero-kicker">{{ application_title }}</p>
+        <h1>Bring your skills to community-centered health work.</h1>
+        <p>{{ application_intro }}</p>
+    </div>
+</section>
+
+<section class="section application-section">
+    <div class="container form-layout application-layout">
+        <aside class="rich-panel application-aside">
+            <p class="eyebrow">Application process</p>
+            <h2>{{ application_title }}</h2>
+            <p>Share your interest and relevant experience. Our team will review submissions and contact shortlisted candidates.</p>
+            <div class="application-steps">
+                <p><strong>1</strong> Select an opportunity.</p>
+                <p><strong>2</strong> Share your details and motivation.</p>
+                <p><strong>3</strong> Add a secure CV or portfolio link if available.</p>
+            </div>
+            <p class="form-hint">Please do not include sensitive health or identity documents in this form.</p>
+            <a class="text-link" href="{% url back_url_name %}">Back to opportunities</a>
+        </aside>
+
+        <form class="panel-form" method="post" novalidate>
+            {% csrf_token %}
+            {% for message in messages %}
+            <div class="notice" role="status">{{ message }}</div>
+            {% endfor %}
+            {% if application_form.non_field_errors %}
+            <div class="form-alert" role="alert">
+                {% for error in application_form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-field">
+                <label for="{{ application_form.opportunity_label.id_for_label }}">{{ application_form.opportunity_label.label }}</label>
+                {{ application_form.opportunity_label }}
+                {% for error in application_form.opportunity_label.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="form-field">
+                <label for="{{ application_form.full_name.id_for_label }}">{{ application_form.full_name.label }}</label>
+                {{ application_form.full_name }}
+                {% for error in application_form.full_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="form-field">
+                <label for="{{ application_form.email.id_for_label }}">Email address</label>
+                {{ application_form.email }}
+                {% for error in application_form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="form-field">
+                <label for="{{ application_form.phone.id_for_label }}">{{ application_form.phone.label }}</label>
+                {{ application_form.phone }}
+                {% for error in application_form.phone.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="form-field">
+                <label for="{{ application_form.location.id_for_label }}">{{ application_form.location.label }}</label>
+                {{ application_form.location }}
+                {% for error in application_form.location.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="form-field">
+                <label for="{{ application_form.cv_link.id_for_label }}">{{ application_form.cv_link.label }}</label>
+                {{ application_form.cv_link }}
+                <p class="form-hint">Share a private cloud-document link only when you are comfortable doing so.</p>
+                {% for error in application_form.cv_link.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="form-field">
+                <label for="{{ application_form.cover_message.id_for_label }}">{{ application_form.cover_message.label }}</label>
+                {{ application_form.cover_message }}
+                {% for error in application_form.cover_message.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="honeypot" aria-hidden="true">
+                <label for="{{ application_form.website.id_for_label }}">{{ application_form.website.label }}</label>
+                {{ application_form.website }}
+            </div>
+            <div class="form-field consent-field">
+                <label class="check-label" for="{{ application_form.privacy_consent.id_for_label }}">
+                    {{ application_form.privacy_consent }}
+                    <span>I consent to Health Planet Foundation using my details to assess this application and contact me about this opportunity. Read our <a href="{% url 'privacy' %}">privacy notice</a>.</span>
+                </label>
+                {% for error in application_form.privacy_consent.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <button class="button button-primary" type="submit">Submit application</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -15,6 +15,7 @@ from .models import (
     PageContent,
     PartnerLogo,
     Project,
+    ProjectImage,
     SectionContent,
     SiteSettings,
     StatItem,
@@ -40,6 +41,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 )
             },
         ),
+        ("Analytics", {"fields": ("analytics_measurement_id",)}),
     )
 
     def has_add_permission(self, request):
@@ -67,7 +69,7 @@ class PageContentAdmin(admin.ModelAdmin):
     list_display = ("title", "slug", "hero_kicker", "hero_class")
     prepopulated_fields = {"slug": ("title",)}
     fieldsets = (
-        ("Page", {"fields": ("title", "slug", "meta_title")}),
+        ("Page", {"fields": ("title", "slug", "meta_title", "meta_description")}),
         ("Hero", {"fields": ("hero_class", "hero_kicker", "hero_title", "hero_text")}),
         ("Hero Image", {"fields": ("image", "static_image", "image_alt")}),
     )
@@ -99,11 +101,38 @@ class StatItemAdmin(admin.ModelAdmin):
     list_editable = ("sort_order", "is_active")
 
 
+class ProjectImageInline(admin.TabularInline):
+    model = ProjectImage
+    extra = 1
+    fields = ("image", "static_image", "image_alt", "caption", "sort_order", "is_active")
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("title", "status", "sort_order", "is_active")
+    list_display = ("title", "slug", "status", "location", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
-    search_fields = ("title", "description", "status")
+    prepopulated_fields = {"slug": ("title",)}
+    search_fields = ("title", "description", "body", "outcomes_text", "status", "location")
+    inlines = (ProjectImageInline,)
+    fieldsets = (
+        (
+            "Impact story",
+            {
+                "fields": (
+                    "title",
+                    "slug",
+                    "description",
+                    "body",
+                    "outcomes_text",
+                    "status",
+                    "location",
+                    "period_label",
+                )
+            },
+        ),
+        ("Cover Image", {"fields": ("image", "static_image", "image_alt")}),
+        ("Publishing", {"fields": ("sort_order", "is_active")}),
+    )
 
 
 class NewsImageInline(admin.TabularInline):

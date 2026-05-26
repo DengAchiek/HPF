@@ -18,23 +18,31 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, re_path
 from django.views.static import serve
 
+from core.sitemaps import sitemaps
 from core import views
 
 urlpatterns = [
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
     path("projects/", views.projects, name="projects"),
+    path("projects/<slug:slug>/", views.project_detail, name="project_detail"),
     path("focus-areas/<slug:slug>/", views.focus_area, name="focus_area"),
     path("news/", views.news, name="news"),
     path("news/<slug:slug>/", views.news_detail, name="news_detail"),
     path("careers/", views.careers, name="careers"),
+    path("careers/apply/", views.career_apply, name="career_apply"),
     path("internships/", views.internships, name="internships"),
+    path("internships/apply/", views.internship_apply, name="internship_apply"),
     path("donate/", views.donate, name="donate"),
     path("contact/", views.contact, name="contact"),
     path("privacy/", views.privacy, name="privacy"),
+    path("robots.txt", views.robots_txt, name="robots"),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path("health/", views.health_check, name="health_check"),
     path("admin/", admin.site.urls),
 ]
 

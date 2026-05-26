@@ -1,6 +1,8 @@
 from datetime import date
+from unittest.mock import patch
 
 from django.contrib.admin.sites import AdminSite
+from django.db.utils import DatabaseError
 from django.test import RequestFactory, TestCase
 
 from .models import (
@@ -17,6 +19,7 @@ from .models import (
     PageContent,
     PartnerLogo,
     Project,
+    ProjectImage,
     SectionContent,
     SiteSettings,
     StatItem,
@@ -75,7 +78,7 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "healthyplanetfoundation@gmail.com")
         self.assertContains(response, 'class="photo-sequence"', count=4)
         self.assertContains(response, 'data-marquee="photo"')
-        self.assertContains(response, "20260525-forms-5")
+        self.assertContains(response, "20260526-impact-applications-2")
 
     def test_hero_carousels_use_page_specific_images(self):
         home_response = self.client.get("/")
@@ -119,6 +122,52 @@ class PublicContentFallbackTests(TestCase):
         self.assertContains(response, "WASH")
         self.assertContains(response, "Water safety demonstrations")
 
+    def test_project_listing_links_to_default_impact_article(self):
+        response = self.client.get("/projects/")
+
+        self.assertContains(response, "/projects/climate-smart-clinics/")
+        self.assertContains(response, "View impact")
+
+        detail_response = self.client.get("/projects/climate-smart-clinics/")
+
+        self.assertEqual(detail_response.status_code, 200)
+        self.assertContains(detail_response, "Impact in focus")
+        self.assertContains(detail_response, "Community-led risk mapping")
+        self.assertContains(detail_response, "Climate pressure can interrupt basic health services")
+        self.assertContains(
+            detail_response,
+            '<link rel="canonical" href="http://testserver/projects/climate-smart-clinics/">',
+        )
+
+    def test_admin_project_impact_content_and_gallery_render(self):
+        project = Project.objects.create(
+            title="Admin Impact Project",
+            description="A concise impact summary.",
+            status="Complete",
+            location="Eastern Province",
+            period_label="2025-2026",
+            body="This impact story is editable in the admin site.",
+            outcomes_text="Reached local volunteers\nImproved referral coordination",
+            static_image="images/im-13.jpeg",
+            image_alt="Project cover",
+            is_active=True,
+        )
+        ProjectImage.objects.create(
+            project=project,
+            static_image="images/im-15.jpeg",
+            image_alt="Impact gallery image",
+            caption="Materials in use",
+            is_active=True,
+        )
+
+        response = self.client.get(project.detail_href)
+
+        self.assertContains(response, "Admin Impact Project")
+        self.assertContains(response, "Eastern Province")
+        self.assertContains(response, "Improved referral coordination")
+        self.assertContains(response, "This impact story is editable in the admin site.")
+        self.assertContains(response, "images/im-15.jpeg")
+
     def test_privacy_notice_is_available_from_public_footer(self):
         response = self.client.get("/privacy/")
 
@@ -128,6 +177,53 @@ class PublicContentFallbackTests(TestCase):
 
         home_response = self.client.get("/")
         self.assertContains(home_response, 'href="/privacy/"')
+
+    def test_seo_sitemap_robots_and_health_monitoring_endpoints(self):
+        PageContent.objects.create(
+            slug="home",
+            title="Home",
+            meta_title="HPF Search Title",
+            meta_description="Admin-managed search description.",
+            hero_title="Home hero",
+            hero_text="Fallback text",
+        )
+        response = self.client.get("/")
+
+        self.assertContains(response, 'content="Admin-managed search description."')
+        self.assertContains(response, '<link rel="canonical" href="http://testserver/">')
+        self.assertContains(response, 'property="og:title" content="HPF Search Title"')
+
+        sitemap_response = self.client.get("/sitemap.xml")
+        self.assertEqual(sitemap_response.status_code, 200)
+        self.assertContains(sitemap_response, "http://testserver/projects/climate-smart-clinics/")
+        self.assertContains(sitemap_response, "http://testserver/privacy/")
+
+        robots_response = self.client.get("/robots.txt")
+        self.assertContains(robots_response, "Disallow: /admin/")
+        self.assertContains(robots_response, "Sitemap: http://testserver/sitemap.xml")
+
+        health_response = self.client.get("/health/")
+        self.assertEqual(health_response.json(), {"status": "ok", "database": "ok"})
+
+    @patch("core.views.connection.cursor", side_effect=DatabaseError)
+    def test_health_monitoring_reports_database_failure(self, cursor):
+        response = self.client.get("/health/")
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.json()["status"], "unavailable")
+
+    def test_configured_analytics_requires_visitor_consent(self):
+        SiteSettings.objects.create(
+            organization_name="Health Planet Foundation",
+            analytics_measurement_id="G-HPF123456",
+        )
+
+        response = self.client.get("/")
+
+        self.assertContains(response, "Analytics preferences")
+        self.assertContains(response, "G\\u002DHPF123456")
+        self.assertContains(response, 'data-analytics-allow')
+        self.assertNotContains(response, '<script async src="https://www.googletagmanager.com')
 
     def test_about_team_uses_staff_directory_defaults(self):
         response = self.client.get("/about/")

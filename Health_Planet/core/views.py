@@ -1,10 +1,14 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.db.utils import OperationalError, ProgrammingError
-from django.http import Http404
+from django.db import connection
+from django.db.utils import DatabaseError, OperationalError, ProgrammingError
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
+from careers.forms import ApplicationSubmissionForm
+from careers.models import ApplicationSubmission
 from contacts.forms import ContactSubmissionForm
 from donations.forms import DonationInterestForm
 
@@ -130,17 +134,36 @@ def notify_team(subject, body, recipient):
     )
 
 
-def base_page_context(slug):
-    page = get_page(slug)
+def seo_context(request, title, description, image_url=""):
     return {
+        "seo_title": title,
+        "seo_description": description,
+        "seo_image": request.build_absolute_uri(image_url) if image_url else "",
+        "canonical_url": request.build_absolute_uri(request.path),
+    }
+
+
+def base_page_context(slug, request=None):
+    page = get_page(slug)
+    context = {
         "page": page,
         "sections": get_sections(slug),
         "hero_slides": get_page_hero_slides(slug, page),
     }
+    if request:
+        context.update(
+            seo_context(
+                request,
+                getattr(page, "meta_title", "") or getattr(page, "title", ""),
+                getattr(page, "meta_description", "") or getattr(page, "hero_text", ""),
+                getattr(page, "image_url", ""),
+            )
+        )
+    return context
 
 
 def home(request):
-    context = base_page_context("home")
+    context = base_page_context("home", request)
     gallery_images = list_or_default(
         GalleryImage.objects.filter(
             gallery_key="home_gallery",
@@ -190,7 +213,7 @@ def home(request):
 
 
 def about(request):
-    context = base_page_context("about")
+    context = base_page_context("about", request)
     about_slides = list_or_default(
         GalleryImage.objects.filter(
             gallery_key="about_slideshow",
@@ -229,7 +252,7 @@ def about(request):
 
 
 def projects(request):
-    context = base_page_context("projects")
+    context = base_page_context("projects", request)
     projects = list_or_default(
         Project.objects.filter(is_active=True).order_by("sort_order", "id"),
         defaults.PROJECTS,
@@ -237,6 +260,60 @@ def projects(request):
     context["projects"] = projects
     context["hero_slides"] = get_page_hero_slides("projects", context["page"], projects)
     return render(request, "projects.html", context)
+
+
+def find_default_project(slug):
+    for project in defaults.PROJECTS:
+        if getattr(project, "slug", "") == slug:
+            return project
+    return None
+
+
+def project_detail(request, slug):
+    project = safe_first(
+        Project.objects.prefetch_related("gallery_images").filter(slug=slug, is_active=True)
+    )
+
+    if project:
+        gallery_images = safe_list(
+            project.gallery_images.filter(is_active=True).order_by("sort_order", "id")
+        )
+        related_projects = safe_list(
+            Project.objects.filter(is_active=True)
+            .exclude(pk=project.pk)
+            .order_by("sort_order", "id")[:3]
+        )
+    else:
+        project = find_default_project(slug)
+        if project is None:
+            raise Http404("Project not found")
+        gallery_images = getattr(project, "gallery_images", [])
+        related_projects = [
+            item for item in defaults.PROJECTS if getattr(item, "slug", "") != slug
+        ][:3]
+
+    context = base_page_context("projects", request)
+    context.update(
+        {
+            "project": project,
+            "gallery_images": gallery_images,
+            "related_projects": related_projects,
+            "hero_slides": build_hero_slides(
+                getattr(project, "image_url", ""),
+                getattr(project, "image_alt", ""),
+                gallery_images,
+            ),
+        }
+    )
+    context.update(
+        seo_context(
+            request,
+            f"{project.title} | Impact | Health Planet Foundation",
+            project.description,
+            getattr(project, "image_url", ""),
+        )
+    )
+    return render(request, "project_detail.html", context)
 
 
 def focus_area(request, slug):
@@ -247,7 +324,7 @@ def focus_area(request, slug):
     if area is None:
         raise Http404("Focus area not found")
 
-    context = base_page_context("focus_area")
+    context = base_page_context("focus_area", request)
     context["area"] = area
     context["hero_slides"] = get_hero_slides(
         f"focus_{slug}_hero",
@@ -255,11 +332,19 @@ def focus_area(request, slug):
         getattr(area, "image_alt", ""),
         defaults.FOCUS_HERO_SLIDES.get(slug, defaults.HERO_SLIDES.get("focus_area", [])),
     )
+    context.update(
+        seo_context(
+            request,
+            f"{area.title} | Health Planet Foundation",
+            area.summary,
+            getattr(area, "image_url", ""),
+        )
+    )
     return render(request, "focus_area.html", context)
 
 
 def news(request):
-    context = base_page_context("news")
+    context = base_page_context("news", request)
     news_items = list_or_default(
         NewsItem.objects.filter(is_active=True).order_by("sort_order", "id"),
         defaults.NEWS_ITEMS,
@@ -303,7 +388,7 @@ def news_detail(request, slug):
         ][:3]
         article_body = getattr(item, "body", "") or item.summary
 
-    context = base_page_context("news")
+    context = base_page_context("news", request)
     context.update(
         {
             "item": item,
@@ -317,11 +402,19 @@ def news_detail(request, slug):
             ),
         }
     )
+    context.update(
+        seo_context(
+            request,
+            f"{item.title} | News | Health Planet Foundation",
+            item.summary,
+            getattr(item, "image_url", ""),
+        )
+    )
     return render(request, "news_detail.html", context)
 
 
 def careers(request):
-    context = base_page_context("careers")
+    context = base_page_context("careers", request)
     hero_sources = [
         context["sections"].get("careers_intro"),
         *defaults.HERO_SLIDES.get("careers", []),
@@ -335,7 +428,7 @@ def careers(request):
 
 
 def internships(request):
-    context = base_page_context("internships")
+    context = base_page_context("internships", request)
     hero_sources = [
         context["sections"].get("internships_intro"),
         *defaults.HERO_SLIDES.get("internships", []),
@@ -348,8 +441,93 @@ def internships(request):
     return render(request, "internships.html", context)
 
 
+def application_page(request, application_type):
+    is_career = application_type == ApplicationSubmission.TYPE_CAREER
+    page_slug = "careers" if is_career else "internships"
+    redirect_name = "career_apply" if is_career else "internship_apply"
+    context = base_page_context(page_slug, request)
+    if is_career:
+        opportunities = list_or_default(
+            CareerOpening.objects.filter(is_active=True).order_by("sort_order", "id"),
+            defaults.CAREER_OPENINGS,
+        )
+    else:
+        opportunities = list_or_default(
+            InternshipTrack.objects.filter(is_active=True).order_by("sort_order", "id"),
+            defaults.INTERNSHIPS,
+        )
+    opportunity_labels = [opportunity.role for opportunity in opportunities]
+    requested_opportunity = request.GET.get("opportunity", "")
+    initial = (
+        {"opportunity_label": requested_opportunity}
+        if requested_opportunity in opportunity_labels
+        else None
+    )
+    form = ApplicationSubmissionForm(
+        request.POST or None,
+        initial=initial,
+        application_type=application_type,
+        opportunities=opportunity_labels,
+    )
+
+    if request.method == "POST" and request.POST.get("website"):
+        messages.success(request, "Thank you. Your application has been received.")
+        return redirect(redirect_name)
+
+    if request.method == "POST" and form.is_valid():
+        submission = form.save()
+        notify_team(
+            "New website application received",
+            (
+                f"Type: {submission.get_application_type_display()}\n"
+                f"Opportunity: {submission.opportunity_label}\n"
+                f"Name: {submission.full_name}\n"
+                f"Email: {submission.email}\n"
+                f"Phone: {submission.phone or 'Not provided'}\n"
+                f"Location: {submission.location or 'Not provided'}\n"
+                f"CV or portfolio: {submission.cv_link or 'Not provided'}\n\n"
+                f"Candidate message:\n{submission.cover_message}"
+            ),
+            settings.APPLICATION_NOTIFICATION_EMAIL,
+        )
+        messages.success(request, "Thank you. Your application has been received.")
+        return redirect(redirect_name)
+
+    context.update(
+        {
+            "application_form": form,
+            "application_type": application_type,
+            "application_title": "Career application" if is_career else "Internship application",
+            "application_intro": (
+                "Apply for a current role or submit a general career application."
+                if is_career
+                else "Tell us which internship track interests you and how you hope to contribute."
+            ),
+            "back_url_name": "careers" if is_career else "internships",
+        }
+    )
+    context["hero_slides"] = get_page_hero_slides(page_slug, context["page"])
+    context.update(
+        seo_context(
+            request,
+            f"{context['application_title']} | Health Planet Foundation",
+            context["application_intro"],
+            getattr(context["page"], "image_url", ""),
+        )
+    )
+    return render(request, "application.html", context)
+
+
+def career_apply(request):
+    return application_page(request, ApplicationSubmission.TYPE_CAREER)
+
+
+def internship_apply(request):
+    return application_page(request, ApplicationSubmission.TYPE_INTERNSHIP)
+
+
 def donate(request):
-    context = base_page_context("donate")
+    context = base_page_context("donate", request)
     hero_sources = [
         context["sections"].get("donate_details"),
         *defaults.HERO_SLIDES.get("donate", []),
@@ -397,7 +575,7 @@ def donate(request):
 
 
 def contact(request):
-    context = base_page_context("contact")
+    context = base_page_context("contact", request)
     form = ContactSubmissionForm(request.POST or None)
 
     if request.method == "POST" and request.POST.get("website"):
@@ -433,4 +611,20 @@ def contact(request):
 
 
 def privacy(request):
-    return render(request, "privacy.html", base_page_context("privacy"))
+    return render(request, "privacy.html", base_page_context("privacy", request))
+
+
+def robots_txt(request):
+    sitemap_url = request.build_absolute_uri(reverse("sitemap"))
+    content = f"User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {sitemap_url}\n"
+    return HttpResponse(content, content_type="text/plain")
+
+
+def health_check(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+    except DatabaseError:
+        return JsonResponse({"status": "unavailable", "database": "error"}, status=503)
+    return JsonResponse({"status": "ok", "database": "ok"})
