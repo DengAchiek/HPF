@@ -14,6 +14,9 @@ import importlib.util
 import os
 from pathlib import Path
 
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 HAS_WHITENOISE = importlib.util.find_spec("whitenoise") is not None
@@ -112,12 +115,38 @@ WSGI_APPLICATION = "Health_Planet.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_SSL_REQUIRE = os.environ.get(
+    "DATABASE_SSL_REQUIRE",
+    "True" if os.environ.get("RENDER") else "False",
+).lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
 }
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=DATABASE_SSL_REQUIRE,
+        )
+    }
+elif os.environ.get("RENDER"):
+    raise ImproperlyConfigured(
+        "DATABASE_URL is required on Render. Attach a PostgreSQL database "
+        "and expose its connection string as DATABASE_URL."
+    )
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
