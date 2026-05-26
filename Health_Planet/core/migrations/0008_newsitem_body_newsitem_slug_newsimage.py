@@ -123,7 +123,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="newsitem",
             name="slug",
-            field=models.SlugField(blank=True, max_length=220),
+            # Avoid creating PostgreSQL's temporary LIKE index before this
+            # populated field becomes unique later in this migration.
+            field=models.SlugField(blank=True, db_index=False, max_length=220),
         ),
         migrations.CreateModel(
             name="NewsImage",
