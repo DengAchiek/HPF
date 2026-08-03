@@ -38,6 +38,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     ".onrender.com",
+    "healthyplanetzambia.co.za",
+    ".healthyplanetzambia.co.za",
 ]
 
 extra_allowed_hosts = os.environ.get("ALLOWED_HOSTS")
